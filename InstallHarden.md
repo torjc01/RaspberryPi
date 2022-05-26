@@ -60,7 +60,7 @@ Inserir o cartão no Raspberry Pi, e fazer o primeiro logon com o usuário defau
 
 # Take note of your ip address 
 
-Alternartiva 1: `ping`
+## Alternartiva 1: `ping`
 
 O raspbian vem configurado com o hostname 
 
@@ -80,7 +80,7 @@ Approximate round trip times in milli-seconds:
     
 ```
 
-Alternativa 2: arp 
+## Alternativa 2: arp 
 
 The MAC Address, or Media Access Control Address, of a host, identifies the serial number of the Network Card. 
 This serial number can be traced back to a vendor. 
@@ -108,7 +108,7 @@ Interface: 192.168.1.216 --- 0x12
   
 ```
 
-Alternativa 3: nmap 
+## Alternativa 3: nmap 
 
 NMAP or the Network Mapper is a tool originally developed in 1997 for Linux. 
 Availability is much better now with versions for OSX, Windows and Unix systems as well as the original Linux platform. 
