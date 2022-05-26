@@ -118,7 +118,57 @@ Make sure that the host we install NMAP onto is on the same network as the Raspb
 Instalar o nmap 
 
 ```
-$ sudo nmap -sP 192.168.0.0/24
+sudo apt-get install nmap
+```
+
+Verifique qual é a subnet da sua rede local. 
+
+```
+$ sudo nmap -sP 192.168.1.*/24
+
+Starting Nmap 7.70 ( https://nmap.org ) at 2022-05-26 15:42 EDT
+Nmap scan report for SR400ac-0E00.lan (192.168.1.1)
+Host is up (0.0017s latency).
+MAC Address: 3C:90:66:98:0E:01 (SmartRG)
+Nmap scan report for boaz.lan (192.168.1.135)
+Host is up (0.068s latency).
+MAC Address: DC:A6:32:4A:ED:F3 (Raspberry Pi Trading)
+Nmap scan report for Google-Nest-Mini.lan (192.168.1.147)
+Host is up (0.038s latency).
+MAC Address: CC:F4:11:C3:6F:5D (Google)
+Nmap scan report for Roomba-3162880C92435880.lan (192.168.1.156)
+Host is up (0.010s latency).
+MAC Address: 80:C5:F2:76:72:2C (AzureWave Technology)
+Nmap scan report for android-30b7ded2bf872b05.lan (192.168.1.176)
+Host is up (0.045s latency).
+MAC Address: EC:2C:E9:72:00:C2 (Unknown)
+Nmap scan report for Express.lan (192.168.1.179)
+Host is up (0.18s latency).
+MAC Address: C8:3A:6B:E2:87:21 (Roku)
+Nmap scan report for XboxOne.lan (192.168.1.199)
+Host is up (0.010s latency).
+MAC Address: C0:33:5E:8F:7D:D3 (Microsoft)
+Nmap scan report for moto-g-20.lan (192.168.1.206)
+Host is up (0.010s latency).
+MAC Address: 7E:FC:E5:63:C5:CE (Unknown)
+Nmap scan report for iPad.lan (192.168.1.209)
+Host is up (0.023s latency).
+MAC Address: FE:82:EA:68:57:7F (Unknown)
+Nmap scan report for HAL9000.lan (192.168.1.216)
+Host is up (0.19s latency).
+MAC Address: 14:F6:D8:EF:5D:76 (Intel Corporate)
+Nmap scan report for Galaxy-A7-2018.lan (192.168.1.230)
+Host is up (0.16s latency).
+MAC Address: 92:35:07:4C:F0:58 (Unknown)
+Nmap scan report for Google-Home-Mini.lan (192.168.1.235)
+Host is up (0.15s latency).
+MAC Address: E4:F0:42:36:1A:87 (Google)
+Nmap scan report for NPI074068.lan (192.168.1.243)
+Host is up (0.13s latency).
+MAC Address: 94:53:30:7D:D5:99 (Hon Hai Precision Ind.)
+Nmap scan report for jakin.lan (192.168.1.186)
+Host is up.
+Nmap done: 256 IP addresses (14 hosts up) scanned in 8.24 seconds
 
 ```
 
