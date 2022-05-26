@@ -32,7 +32,7 @@ Acessar o drive, e entrar no diretório `/boot`
 Para habilitar o acesso SSH, criar um arquivo vazio chamado `ssh`: 
 
 ```
-touch ssh 
+$ touch ssh 
 ``` 
 
 - Configurar wifi. 
@@ -124,10 +124,10 @@ $ sudo nmap -sP 192.168.0.0/24
 
 # Remove unnecessary programs 
 
-df -h
 take a sample of the amount of space used in your partitions. Take note of the values. 
-
 ```
+$ df -h
+
 Filesystem      Size  Used Avail Use% Mounted on
 /dev/root        14G  4.1G  9.4G  31% /
 devtmpfs        1.8G     0  1.8G   0% /dev
@@ -137,23 +137,27 @@ tmpfs           5.0M   20K  5.0M   1% /run/lock
 tmpfs           1.9G     0  1.9G   0% /sys/fs/cgroup
 /dev/mmcblk0p1  253M   50M  203M  20% /boot
 tmpfs           384M     0  384M   0% /run/user/1001
-```
 
-sudo apt-get remove --purge --assume-yes \
+
+$ sudo apt-get remove --purge --assume-yes \
 scratch* \ 
 libreoffice* \
 wolfram-engine* \
 sonic-pi \
 minecraft-pi 
 
+```
+
 take another sample of space available. Compare with your notes and behold the space freed!
 
-df -h
 
 
-#Configure the defaults 
 
+# Configure the defaults 
+
+```
 sudo raspi-config
+```
 
 - Enable ssh 
 
