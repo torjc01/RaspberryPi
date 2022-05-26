@@ -1,0 +1,463 @@
+# Install and harden a headless RaspberryPi: From zero to hero 
+
+Seja para projetos de IOT, seja para utilização um servidor web, o raspberry pi é uma excelente plataforma para projetos e testes...
+
+Eu utilizo a plataforma como base de servidores de teste para 
+
+Quite often you might want to run a ‘headless’ Raspberry Pi without a screen or keyboard, using SSH to connect. SSH can be enabled in the config menu when you first boot the Pi. 
+
+Pré-requisitos: 
+
+- Raspberry Pi;
+- MicroSD Card (recomendado ao menos 16Gb, SD10); 
+- Adaptador de cartão SD
+- Raspberry Pi fonte 
+
+Instalação
+
+Faça o download do Raspberry Pi Imager no computador local, de acordo com o sistema operacional. O Imager está  disponível à partir da Raspberry Pi Foundation.
+
+https://www.raspberrypi.com/software/
+
+Após a instalação, lance o Imager e escolha a versão do OS: 
+
+CHOOSE OS -> Raspberry Pi OS (Other) -> Raspberry Pi OS Lite (32-bits)
+
+Acompanhe a instalação 
+
+Ao fim da instalação, ejetar o cartão SD e reconectá-lo. 
+
+Acessar o drive, e entrar no diretório `/boot`
+
+Para habilitar o acesso SSH, criar um arquivo vazio chamado `ssh`: 
+
+```
+touch ssh 
+``` 
+
+- Configurar wifi. 
+
+Ainda dentro do diretório `/boot`, crie um arquivo `wpa_supplicant.conf` e cole o conteúdo abaixo: 
+
+```
+country=ca
+update_config=1
+ctrl_interface=/var/run/wpa_supplicant
+
+network={
+ scan_ssid=1
+ ssid="MyNetworkSSID"
+ psk="Pa55w0rd1234"
+}
+```
+
+... config with wifi credentials ... 
+
+Inserir o cartão no Raspberry Pi, e fazer o primeiro logon com o usuário default da distribuição do Raspbian. 
+`ssh pi@<ip address>`
+
+`pi:raspberry`
+
+# Take note of your ip address 
+
+Alternartiva 1: `ping`
+
+O raspbian vem configurado com o hostname 
+
+```
+$ ping raspberry
+
+Pinging raspberry.lan [192.168.1.186] with 32 bytes of data:
+Reply from 192.168.1.186: bytes=32 time=2ms TTL=64
+Reply from 192.168.1.186: bytes=32 time=7ms TTL=64
+Reply from 192.168.1.186: bytes=32 time=3ms TTL=64
+Reply from 192.168.1.186: bytes=32 time=3ms TTL=64
+
+Ping statistics for 192.168.1.186:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 2ms, Maximum = 7ms, Average = 3ms
+    
+```
+
+Alternativa 2: arp 
+
+The MAC Address, or Media Access Control Address, of a host, identifies the serial number of the Network Card. 
+This serial number can be traced back to a vendor. 
+For the Raspberry Pi Foundation, the MAC Address will begin with the characters B8:27:EB. 
+Scanning the network with nmap we can return hosts that are up and their MAC Address. 
+Make you are running the command as root or with sudo as the MAC Address is not returned if you run the command as a standard user. 
+I am using the address range 192.168.0.0/24 as that is the network that I have at home. You will need to adjust to match your network.
+
+```bash 
+$ arp -av
+
+Interface: 192.168.1.216 --- 0x12
+  Internet Address      Physical Address      Type
+  192.168.1.1           3c-90-66-98-0e-01     dynamic
+  192.168.1.123         00-00-00-00-00-00     invalid
+  192.168.1.135         dc-a6-32-4a-ed-f3     dynamic
+  192.168.1.147         00-00-00-00-00-00     invalid
+  192.168.1.176         ec-2c-e9-72-00-c2     dynamic
+  192.168.1.179         c8-3a-6b-e2-87-21     dynamic
+  192.168.1.185         00-00-00-00-00-00     invalid
+  192.168.1.186         dc-a6-32-1a-56-ec     dynamic
+  192.168.1.235         00-00-00-00-00-00     invalid
+  192.168.1.243         94-53-30-7d-d5-99     dynamic
+  192.168.1.255         ff-ff-ff-ff-ff-ff     static
+  
+```
+
+Alternativa 3: nmap 
+
+NMAP or the Network Mapper is a tool originally developed in 1997 for Linux. 
+Availability is much better now with versions for OSX, Windows and Unix systems as well as the original Linux platform. 
+NMAP can be used by system administrators in locating threats on their network, but we will see how we can find my raspberry pi using NMAP. 
+Make sure that the host we install NMAP onto is on the same network as the Raspberry Pi need locating. 
+
+Instalar o nmap 
+
+```
+$ sudo nmap -sP 192.168.0.0/24
+
+```
+
+# Remove unnecessary programs 
+
+df -h
+take a sample of the amount of space used in your partitions. Take note of the values. 
+
+```
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/root        14G  4.1G  9.4G  31% /
+devtmpfs        1.8G     0  1.8G   0% /dev
+tmpfs           1.9G     0  1.9G   0% /dev/shm
+tmpfs           1.9G   17M  1.9G   1% /run
+tmpfs           5.0M   20K  5.0M   1% /run/lock
+tmpfs           1.9G     0  1.9G   0% /sys/fs/cgroup
+/dev/mmcblk0p1  253M   50M  203M  20% /boot
+tmpfs           384M     0  384M   0% /run/user/1001
+```
+
+sudo apt-get remove --purge --assume-yes \
+scratch* \ 
+libreoffice* \
+wolfram-engine* \
+sonic-pi \
+minecraft-pi 
+
+take another sample of space available. Compare with your notes and behold the space freed!
+
+df -h
+
+
+#Configure the defaults 
+
+sudo raspi-config
+
+- Enable ssh 
+
+- Configure locale 
+
+
+
+
+# Keep the system updated
+
+sudo apt-get update 
+
+sudo apt-get upgrade 
+
+sudo apt-get clean 
+
+sudo apt-get autoremove 
+
+# Use of password 
+
+- Don't use auto-login or empty passwords 
+
+- Change the default password for pi 
+
+`passwd`
+
+prefer passphrases with long strings - easier to remember, harder to guess 
+
+# Disable the pi user 
+
+sudo adduser <username> 
+sudo adduser <username> sudo 
+sudo deluser -remove-home pi 
+
+# Stop unnecessary services 
+
+List running services:  
+sudo service --status-all 
+
+Stop a service 
+sudo service <service-name> stop 
+
+Start a service 
+sudo service <service-name> start 
+
+If it starts automatically on boot, try: 
+sudo update-rc.d <service-name> remove
+
+To uninstall it
+sudo apt remove <service-name>
+
+# Make sudo require password 
+
+edit the file 
+sudo nano /etc/sudoers.d/010_pi-nopasswd
+
+Find the line: 
+pi ALL=(ALL) NOPASSWD: ALL
+replace with 
+pi ALL=(ALL) PASSWD: ALL
+
+
+# Prevent root login via SSH 
+
+Edito the file 
+sudo nano /etc/ssh/sshd_config
+
+find the line: 
+#PermitRootLogin prohibit-password
+
+If you have something else, comment out the line 
+
+Restart the SSH  server 
+sudo service ssh restart
+
+# Change SSH default port (not great)
+
+Edit the file 
+sudo nano /etc/ssh/sshd_config
+
+Find 
+#Port 22
+replace by 
+Port 1111
+
+restart the server 
+sudo service ssh restart
+
+
+Update the firewall definitions 
+
+Before closing the actual session, open another and try connecting to the new port.
+
+
+# Require ssh-keys to login 
+
+# Install fail2ban 
+
+sudo apt install fail2ban
+
+sudo nano /etc/fail2ban/jail.conf
+
+sudo service fail2ban restart
+
+# Install a firewall 
+
+sudo apt-get install ufw 
+
+Allow apache for anyone 
+
+sudo ufw allow 80
+sudo ufw allow 443
+
+Allow ssh for an ip address only
+sudo ufw allow from 192.168.1.100 port 22
+
+Enable the firewall 
+sudo ufw enable 
+
+Check everything works fine 
+
+sudo ufw status verbose
+
+
+# Backup your data 
+
+#Crypt your connections 
+
+Change weak protocols for better ones 
+http ==> https
+telnet ==> ssh 
+ftp ==> sftp
+
+# Use a VPN 
+
+# Protect the physical access
+
+# check the logs regularly
+
+/var/log/syslog: main log file for all services.
+/var/log/message: whole systems log file.
+/var/log/auth.log: all authentication attempts are logged here.
+/var/log/mail.log 
+Any critical applications log file, for example /var/log/apache2/error.log or /var/log/mysql/error.log
+
+# Read the news 
+
+CVE Details
+Exploit DB
+NVD Feeds
+
+
+## Remove stuff that is just nuisance 
+
+df -h
+
+sudo apt-get remove --purge --assume-yes \
+scratch* \ 
+libreoffice* \
+wolfram-engine* \
+sonic-pi \
+minecraft-pi 
+
+df -h
+
+sudo apt-get update 
+sudo apt-get upgrade 
+
+
+sudo apt-get install --assume-yes \
+nano \
+mcrypt \
+nasm \
+curl \
+wget \
+hexdump \
+avahi-daemon \
+git \ 
+
+
+
+## Utilities
+
+### MISC 
+wget 
+curl 
+mcrtypt
+nasm 
+
+
+### NodeJS 
+
+### NPM 
+
+### NGrok 
+
+### Mosquitto Broker
+
+### MySQL Server / MariaDB
+
+### COBOL 
+
+```
+sudo apt-get install open-cobol 
+```
+
+Program 
+```
+    Identification Division.
+
+    Program-ID. HelloWorld.
+
+    Data Division.
+
+    Procedure Division.
+
+    Main-Paragraph.
+
+    Display "Hello World"
+
+    Stop Run.
+
+```
+
+Compilation 
+
+```
+cobc -x -o hello HelloWorld.cbl
+```
+
+
+### Free Pascal 
+
+https://www.freepascal.org/down/arm/linux-canada.html
+
+ftp://mirror.freemirror.org/pub/fpc/dist/3.2.2/arm-linux/fpc-3.2.2.arm-linux-eabihf-raspberry.tar
+
+fpc-3.2.2.arm-linux-eabihf-raspberry.tar (56 MB) contains a standard tar archive, with an install script.  
+After untarring the archive, you can run the install script in the created directory by issuing the command `sh install.sh`.
+
+```
+cd /tmp 
+mkdir pascal 
+cd pascal 
+wget ftp://mirror.freemirror.org/pub/fpc/dist/3.2.2/arm-linux/fpc-3.2.2.arm-linux-eabihf-raspberry.tar
+
+tar-xvf fpc-3.2.2.arm-linux-eabihf-raspberry.tar
+```
+
+### Lua 
+
+```
+sudo apt-get update
+sudo apt-get install lua5.1
+sudo apt-get install liblua5.1-0-dev -- development files, need by LuaRocks
+sudo apt-get install lua-socket
+sudo apt-get install luarocks -- package manager for Lua modules
+
+sudo luarocks install luasocket
+```
+
+
+### Fortran 
+
+Install Fortran 90 opensource port, GFortran
+
+```
+sudo apt-get install gfortran 
+````
+
+Hello World program 
+
+```
+program helloworld 
+print *,"Hello World"
+end program helloworld
+```
+
+Compilation 
+
+```
+gfortran -o helloworld ./helloworld.f90
+```
+
+### ADA 
+
+```
+sudo apt-get install gnat
+```  
+
+Hello World 
+
+ 
+ helloworld.adb
+ 
+```
+-- First ADA program
+with Ada.Text_IO;
+use Ada.Text_IO;
+procedure HelloWorld is
+begin
+    Put_Line("Hello World"); 
+end HelloWorld;
+```
+
+Compile 
+gnat compile helloworld.adb 
