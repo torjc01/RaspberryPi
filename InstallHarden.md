@@ -408,13 +408,6 @@ zsh \
 
 ## Utilities
 
-### MISC 
-wget 
-curl 
-mcrtypt
-nasm 
-
-
 ### NodeJS 
 
 ### NPM 
