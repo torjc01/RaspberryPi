@@ -376,8 +376,9 @@ Exploit DB
 NVD Feeds
 
 
-## Remove stuff that is just nuisance 
-
+## Remove stuff that is just nuisance and add meaningful stuff
+ 
+```
 df -h
 
 sudo apt-get remove --purge --assume-yes \
@@ -392,7 +393,6 @@ df -h
 sudo apt-get update 
 sudo apt-get full-upgrade 
 
-
 sudo apt-get install --assume-yes \
 nano \
 mcrypt \
@@ -404,7 +404,7 @@ avahi-daemon \
 git \  
 jq \  
 zsh \  
-
+```
 
 ## Utilities
 
@@ -432,20 +432,20 @@ sudo apt-get install open-cobol
 ```
 
 Program 
-```
-    Identification Division.
+```COBOL
+    IDENTIFICATION DIVISION.
 
-    Program-ID. HelloWorld.
+    PROGRAM-ID. HelloWorld.
 
-    Data Division.
+    DATA DIVISION.
 
-    Procedure Division.
+    PROCEDURE DIVISION.
 
-    Main-Paragraph.
+    MAIN-PARAGRAPH.
 
-    Display "Hello World"
+        DISPLAY "Hello World".
 
-    Stop Run.
+        STOP RUN.
 
 ```
 
@@ -497,7 +497,7 @@ sudo apt-get install gfortran
 
 Hello World program 
 
-```
+```Fortran
 program helloworld 
 print *,"Hello World"
 end program helloworld
@@ -520,7 +520,7 @@ Hello World
  
  helloworld.adb
  
-```
+```ADA
 -- First ADA program
 with Ada.Text_IO;
 use Ada.Text_IO;
