@@ -72,6 +72,14 @@ Inserir o cartão no Raspberry Pi, e fazer o primeiro logon com o usuário defau
 
 # Take note of your ip address 
 
+`/usr/share/nmap/nmap-mac-prefixes`
+
+`DCA632` Raspberry Pi Trading   
+`E45F01` Raspberry Pi Trading  
+`B827EB` Raspberry Pi Foundation  
+
+
+
 ## Alternartiva 1: `ping`
 
 O raspbian vem configurado com o hostname 
@@ -182,6 +190,8 @@ Nmap scan report for jakin.lan (192.168.1.186)
 Host is up.
 Nmap done: 256 IP addresses (14 hosts up) scanned in 8.24 seconds
 
+# Alternativa com awk
+sudo nmap -sP 192.168.1.0/24 | awk '/^Nmap/{ipaddress=$NF}/DC:A6:32/{print ipaddress}'
 ```
 
 # Remove unnecessary programs 
@@ -199,7 +209,6 @@ tmpfs           5.0M   20K  5.0M   1% /run/lock
 tmpfs           1.9G     0  1.9G   0% /sys/fs/cgroup
 /dev/mmcblk0p1  253M   50M  203M  20% /boot
 tmpfs           384M     0  384M   0% /run/user/1001
-
 
 $ sudo apt-get remove --purge --assume-yes \
 scratch* \ 
