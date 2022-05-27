@@ -230,7 +230,7 @@ Faça logout du usuário `pi`, e em seguida refaça login com o usuário recém 
 $ logout 
 ```
 
-Faça a supressão do usuário default pi. 
+Faça a supressão do usuário default `pi`. 
 
 ```
 $ sudo deluser -remove-home pi (remove o usuario e o seu home)
