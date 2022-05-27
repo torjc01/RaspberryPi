@@ -199,7 +199,7 @@ Host is up.
 Nmap done: 256 IP addresses (14 hosts up) scanned in 8.24 seconds
 
 # Alternativa com awk
-sudo nmap -sP 192.168.1.0/24 | awk '/^Nmap/{ipaddress=$NF}/DC:A6:32/{print ipaddress}'
+$ sudo nmap -sP 192.168.1.0/24 | awk '/^Nmap/{ipaddress=$NF}/DC:A6:32/{print ipaddress}'
 ```
 
 # Assegure o acesso ao sistema 
@@ -208,9 +208,33 @@ O acesso ao sistema se dá por meio de contas de usuários que devem ser geridas
 
 Como nós lidaremos com a criação de usuários e com a troca de senhas, é recomendável o uso de um programa de gestão de senhas, como Keepass ou equivalente. No mínimo, mantenha um caderno de log para registrar os seus usuário. 
 
-## Crie um outro usuário 
+## Crie um novo usuário 
+
+O usuário default `pi` é inseguro porque ele é conhecido amplamente. Muitas tentativas de invasão de sistema começam exatamente explorando os usuários default dos sistemas. 
+
+Como exemplo nós criaremos um usuario chamado hackpi. 
+
+```
+$ sudo adduser hackpi  - vai pedir a criação de uma nova senha. Para os outros campos, digite enter para aceitar o branco. 
+$ sudo adduser hackpi sudo 
+$ sudo usermod -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,spi,i2c,gpio hackpi
+```
+Guarde a senha do usuário recém criado. 
+
 
 ## Apague o usuário default pi 
+
+Faça logout du usuário `pi`, e em seguida refaça login com o usuário recém criado, `hackpi`. 
+
+```
+$ logout 
+```
+
+Faça a supressão do usuário default pi. 
+
+```
+$ sudo deluser -remove-home pi (remove o usuario e o seu home)
+```
 
 ## Troque a senha do usuário root 
 
