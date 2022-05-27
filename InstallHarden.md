@@ -18,14 +18,14 @@ They are in order of risk level. If you think you are highly exposed, follow all
 If your risk level isn’t very much, you’ll only have to follow only the first steps.
 
 
-Pré-requisitos: 
+## Pré-requisitos: 
 
 - Raspberry Pi;
 - MicroSD Card (recomendado ao menos 16Gb, SD10); 
 - Adaptador de cartão SD
 - Raspberry Pi fonte 
 
-Instalação
+## Instalação
 
 Faça o download do Raspberry Pi Imager no computador local, de acordo com o sistema operacional. O Imager está  disponível à partir da Raspberry Pi Foundation.
 
