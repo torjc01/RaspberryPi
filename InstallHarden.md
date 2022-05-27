@@ -37,17 +37,18 @@ CHOOSE OS -> Raspberry Pi OS (Other) -> Raspberry Pi OS Lite (32-bits)
 
 Acompanhe a instalação 
 
-Ao fim da instalação, ejetar o cartão SD e reconectá-lo. 
+Ao fim da instalação, ejetar o cartão SD e reconectá-lo ao computador. 
 
-Acessar o drive, e entrar no diretório `/boot`
+
+### Configurar wifi e acesso remoto
+
+Acesse o drive chamdo boot. 
 
 Para habilitar o acesso SSH, criar um arquivo vazio chamado `ssh`: 
 
 ```
 $ touch ssh 
 ``` 
-
-- Configurar wifi. 
 
 Ainda dentro do diretório `/boot`, crie um arquivo `wpa_supplicant.conf` e cole o conteúdo abaixo: 
 
@@ -63,21 +64,28 @@ network={
 }
 ```
 
-... config with wifi credentials ... 
+Altere os campos `ssid` e `psk` para os valores da sua rede local. 
 
-Inserir o cartão no Raspberry Pi, e fazer o primeiro logon com o usuário default da distribuição do Raspbian. 
-`ssh pi@<ip address>`
 
-`pi:raspberry`
+Insera o cartão no Raspberry Pi, espere alguns minutos até o sistema inicializar, e faça o seu primeiro logon com o usuário default da distribuição Raspberry Pi OS. 
 
-# Take note of your ip address 
+`ssh pi@raspberrypi`
+
+A senha do usuário default é `raspberry`. 
+
+## Descubra o endereço IP do seu Raspberry Pi
+
+Uma vez logado no seu Raspberry, cheque o endereço IP do device. 
+
+```
+hostname -I
+```
 
 `/usr/share/nmap/nmap-mac-prefixes`
 
 `DCA632` Raspberry Pi Trading   
 `E45F01` Raspberry Pi Trading  
 `B827EB` Raspberry Pi Foundation  
-
 
 
 ## Alternartiva 1: `ping`
