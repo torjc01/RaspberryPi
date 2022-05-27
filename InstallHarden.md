@@ -194,6 +194,40 @@ Nmap done: 256 IP addresses (14 hosts up) scanned in 8.24 seconds
 sudo nmap -sP 192.168.1.0/24 | awk '/^Nmap/{ipaddress=$NF}/DC:A6:32/{print ipaddress}'
 ```
 
+# Assegure o acesso ao sistema 
+
+O acesso ao sistema se dá por meio de contas de usuários que devem ser geridas e acompanhadas. 
+
+Como nós lidaremos com a criação de usuários e com a troca de senhas, é recomendável o uso de um programa de gestão de senhas, como Keepass ou equivalente. No mínimo, mantenha um caderno de log para registrar os seus usuário. 
+
+## Crie um outro usuário 
+
+## Apague o usuário default pi 
+
+## Troque a senha do usuário root 
+
+O usuário `root` tem privilégios elevados, e sua senha é de conhecimento público. Para assegurar sua conta, você deve alterar a senha do usuário root. 
+
+```bash 
+$ sudo passwd root
+```
+Não se esqueça de manter um registro da senha do usuário root. 
+
+## Impedir login do root via SSH 
+
+Edite o arquivo `/etc/ssh/sshd_config` e localize a linha: 
+
+```
+#PermitRootLogin prohibit-password  
+```
+Se você tiver algo de diferente, comente esta linha. 
+
+Restarte o servidor SSH: 
+
+```
+sudo service ssh restart
+```
+
 # Remove unnecessary programs 
 
 take a sample of the amount of space used in your partitions. Take note of the values. 
@@ -295,18 +329,6 @@ replace with
 pi ALL=(ALL) PASSWD: ALL
 
 
-# Prevent root login via SSH 
-
-Edit the file  
-sudo nano /etc/ssh/sshd_config 
-
-find the line:  
-#PermitRootLogin prohibit-password  
-
-If you have something else, comment out the line 
-
-Restart the SSH  server  
-sudo service ssh restart
 
 # Change SSH default port (not great)
 
