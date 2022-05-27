@@ -288,37 +288,37 @@ pi ALL=(ALL) PASSWD: ALL
 
 # Prevent root login via SSH 
 
-Edito the file 
-sudo nano /etc/ssh/sshd_config
+Edit the file  
+sudo nano /etc/ssh/sshd_config 
 
-find the line: 
-#PermitRootLogin prohibit-password
+find the line:  
+#PermitRootLogin prohibit-password  
 
 If you have something else, comment out the line 
 
-Restart the SSH  server 
+Restart the SSH  server  
 sudo service ssh restart
 
 # Change SSH default port (not great)
 
-Edit the file 
+Edit the file  
 sudo nano /etc/ssh/sshd_config
 
-Find 
-#Port 22
-replace by 
-Port 1111
+Find  
+#Port 22 
+replace by  
+Port 1111 
 
-restart the server 
-sudo service ssh restart
-
-
-Update the firewall definitions 
-
-Before closing the actual session, open another and try connecting to the new port.
+restart the server  
+sudo service ssh restart 
 
 
-# Require ssh-keys to login 
+Update the firewall definitions  
+
+Before closing the actual session, open another and try connecting to the new port. 
+
+
+# Require ssh-keys to login  
 
 # Install fail2ban 
 
@@ -334,19 +334,18 @@ sudo apt-get install ufw
 
 Allow apache for anyone 
 
-sudo ufw allow 80
+sudo ufw allow 80  
 sudo ufw allow 443
 
-Allow ssh for an ip address only
+Allow ssh for an ip address only  
 sudo ufw allow from 192.168.1.100 port 22
 
-Enable the firewall 
+Enable the firewall   
 sudo ufw enable 
 
 Check everything works fine 
 
 sudo ufw status verbose
-
 
 # Backup your data 
 
@@ -363,17 +362,17 @@ ftp ==> sftp
 
 # check the logs regularly
 
-/var/log/syslog: main log file for all services.
-/var/log/message: whole systems log file.
-/var/log/auth.log: all authentication attempts are logged here.
-/var/log/mail.log 
-Any critical applications log file, for example /var/log/apache2/error.log or /var/log/mysql/error.log
+`/var/log/syslog`: main log file for all services.  
+`/var/log/message`: whole systems log file.  
+`/var/log/auth.log`: all authentication attempts are logged here.  
+`/var/log/mail.log` 
+Any critical applications log file, for example `/var/log/apache2/error.log` or `/var/log/mysql/error.log`.
 
 # Read the news 
 
-CVE Details
-Exploit DB
-NVD Feeds
+CVE Details  
+Exploit DB  
+NVD Feeds  
 
 
 ## Remove stuff that is just nuisance and add meaningful stuff
