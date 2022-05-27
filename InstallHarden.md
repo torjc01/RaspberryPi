@@ -6,6 +6,18 @@ Eu utilizo a plataforma como base de servidores de teste para
 
 Quite often you might want to run a ‘headless’ Raspberry Pi without a screen or keyboard, using SSH to connect. SSH can be enabled in the config menu when you first boot the Pi. 
 
+Raspberry Pi comes with poor security by default. If you use it at home or in a small network, it isn’t a big deal, but if you open ports on the Internet, use it as a Wi-Fi access point, or if you install it on a larger network, you need to take security measures to protect your Raspberry Pi. In this article, I’ll show you everything I do with my Linux servers at work to keep them safe.
+
+Improving the security on a Raspberry Pi is similar to any other Linux device. There are logical steps, like using a strong password. And there are also more complex steps like detecting attacks or using encryption.
+
+I’ll share some security tips that you should follow to get higher security for your Raspberry Pi (and they mostly apply to all Linux systems). If you are just using your Raspberry Pi at home, try to apply the first tips at the very least. Follow all of the tips included for a more critical setup, with Internet access or on a larger network.
+
+I selected 17 main security tips, which apply to everyone who hosts a Raspberry Pi and share services on it. I have been a system administrator for 20 years, and these are the tips I apply to any new server installation.
+
+They are in order of risk level. If you think you are highly exposed, follow all the steps, and you’ll be safe.
+If your risk level isn’t very much, you’ll only have to follow only the first steps.
+
+
 Pré-requisitos: 
 
 - Raspberry Pi;
@@ -209,9 +221,13 @@ take another sample of space available. Compare with your notes and behold the s
 sudo raspi-config
 ```
 
-- Enable ssh 
-
-- Configure locale 
+1 - System options 
+ S4 - Hostname 
+5 - Localisation
+ L1 - Locale
+ L2 - Timezone
+ L3 - Keyboard
+ L4 - Wireless country
 
 
 
@@ -220,7 +236,7 @@ sudo raspi-config
 
 sudo apt-get update 
 
-sudo apt-get upgrade 
+sudo apt-get full-upgrade 
 
 sudo apt-get clean 
 
@@ -386,7 +402,8 @@ wget \
 hexdump \
 avahi-daemon \
 git \ 
-
+jq \
+zsh \ 
 
 
 ## Utilities
