@@ -390,7 +390,7 @@ minecraft-pi
 df -h
 
 sudo apt-get update 
-sudo apt-get upgrade 
+sudo apt-get full-upgrade 
 
 
 sudo apt-get install --assume-yes \
@@ -400,10 +400,10 @@ nasm \
 curl \
 wget \
 hexdump \
-avahi-daemon \
-git \ 
-jq \
-zsh \ 
+avahi-daemon \ 
+git \  
+jq \  
+zsh \  
 
 
 ## Utilities
