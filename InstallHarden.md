@@ -252,9 +252,7 @@ Edite o arquivo `/etc/ssh/sshd_config` e localize a linha:
 ```
 #PermitRootLogin prohibit-password  
 ```
-Se você tiver algo de diferente, comente esta linha. 
-
-Restarte o servidor SSH: 
+Descomente a linha e salve o arquivo. Restarte o servidor SSH: 
 
 ```
 sudo service ssh restart
