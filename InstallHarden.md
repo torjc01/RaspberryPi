@@ -426,8 +426,10 @@ ftp ==> sftp
 `/var/log/syslog`: main log file for all services.  
 `/var/log/message`: whole systems log file.  
 `/var/log/auth.log`: all authentication attempts are logged here.  
-`/var/log/mail.log` 
+`/var/log/mail.log`   
 Any critical applications log file, for example `/var/log/apache2/error.log` or `/var/log/mysql/error.log`.
+ 
+Extra activity: install and integrate its logs to a log observer solution, like `ELK Stack` or `Splunk`. 
 
 # Read the news 
 
