@@ -1,0 +1,26 @@
+HAL (for Heuristically programmed ALgoritmic computer, no less) was a masterwork
+of the third computer breakthrough. These seemed to occur at intervals of twenty
+years, and the thought that another one was now immiment already worried a great
+many people. 
+
+The first had been in the 1940s, when the long-obsolete vaccum tube had made 
+possible such clumsy, high speed morons as ENIAC and its successors. Then, in 
+the 1960s, solid-state microelectronics had been perfected. With its advent, it 
+was clear that artificial intelligences at least as powerful as Man's need be no
+larger than office desks - if one only knew how to construct them. 
+
+Probably no one would ever know this; it did not matter. In the 1980s, Minsky 
+and Good have shown how neural networks could be generated automatically - self-
+replicated - in accordance with an arbitrary learning program. Artificial brains
+could be grown by a process strikingly analogous to the development of a human 
+brain. In any given case, the precise details would never be known, and even if 
+they were, they would be millions of times too complex for human understanding. 
+
+Whatever way it worked, the final result was a machine intelligence that could 
+reproduce - some philosophers still preferred to use the word "mimic" - most of
+the activities of the human brain, and with far greater speed and reliability. 
+It was extremelly expensive, and only a few units of the HAL 9000 series had yet
+been built;  but the old jest that it would always be easier to make organic 
+brains by unskilled labor was beginning to sound a litte hollow. 
+
+- Arthur C. Clarke, 2001: A Space Odissey

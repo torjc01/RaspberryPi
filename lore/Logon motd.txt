@@ -1,0 +1,52 @@
+There are two ways to display messages to the user logging in. One is using issue.net and the other the MOTD file. 
+
+1. issue.net - display a banner message before the password login prompt. 
+2. motd - display a banner message after the login prompt. 
+
+Para utilizar os arquivos 
+
+Salvar uma mensagem de aviso no arquivo /etc/issue.net ou /etc/motd
+
+O aviso sera impresso no terminal ssh antes  das informacoes de logon do usuario, ou depois do logon com sucesso do usuario. 
+
+Editar o arquivo /etc/ssh/sshd_config e habilite os banners : 
+
+Banner /etc/issue.net
+
+Restart o servidor SSH: 
+$sudo service ssh restart 
+$sudo systemctl restart ssh
+
+
+
+*===========================*
+* Welcome to sub.zero.ca * 
+*===========================*
+WARNING:
+For him who steal,  hack or connect  without permission to this server, in spite 
+of its  rightful  owner, let him be  struck with  palsy, and all his  members be 
+blasted.  Let him l anguish in  pain crying aloud for mercy, and let there be no 
+surcesase to his  agony till he  sinks to  dissolution. Let  book-worms gnaw his 
+entrails in  token of the  Worm that dieth not, and  when at last he goes to his 
+final punishment, let the flames of Hell consume him for ever and aye. 
+You've been warned.
+
+AVISO: 
+Aquele  que roubar,  hackear ou  se conectar  sem  permissao a  este servidor, a 
+despeito de seu dono por direito, que ele seja atacado pela eplepsia, e todos os
+seus membros sejam dilacerados. Que ele sofra em dor implorando por misericordia  
+e que nao haja alivio para a sua agonia até que ele afunde na dissoluçao. Que os 
+vermes  mastiguem suas  entranhas  em sinal do  Verme imortal, e que q uando ele 
+chegue ao seu  castigo  final, que as  chamas do  Inferno o consumam para todo o 
+sempre.
+Você foi avisado. 
+
+Amem. 
+
+*===========================*
+Aviso clássico: 
+
+ALERT! You are entering into a secured area! Your IP, login time and username have been noted and have been sent to the server administrator. 
+This service is restricted to authorized users only. All activities on this system are logged.
+Unauthorized access will be fully investigated and reported to the appropriate law enforcement agencies, under the .... Act. 
+
