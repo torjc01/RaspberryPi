@@ -35,20 +35,33 @@ Faça o download do Raspberry Pi Imager no computador local, de acordo com o sis
 
 https://www.raspberrypi.com/software/
 
-Após a instalação, lance o Imager e escolha a versão do OS: 
+Após a instalação, lance o Imager e escolha a versão do sistema operacional clicando em `CHOOSE OS`. 
 
-CHOOSE OS -> Raspberry Pi OS (Other) -> Raspberry Pi OS Lite (32-bits)
+![Imager etapa 01](./images/imager01.png)
+
+Na lista `Operating System`, clique na opção `Raspberry Pi OS (Other)` para escolher a instalação da versão do Raspberry Pi OS sem desktop. 
+
+![Imager etapa 02](./images/imager02.png)
+
+Escolha a primeira opção, `Raspberry Pi OS Lite (32-bit)`, assegurando-se que esta é a versão sem desktop (`"A port of Debian with no desktop environment"`). 
+
+![Imager etapa 03](./images/imager03.png)
+
+Escolha o cartão microSD que será gravado clicando em `CHOOSE SD CARD`. Em seguida, clique em `WRITE` para começar a gracação do sistema operacional no cartão.  
+
+![Imager etapa 04](./images/imager04.png)
+
 
 Acompanhe a instalação 
 
-Ao fim da instalação, ejetar o cartão SD e reconectá-lo ao computador. 
+Ao fim da instalação, ejete o cartão SD e reconecte-o ao computador. 
 
 
 ### Configure wifi e acesso remoto
 
-Acesse o drive chamdo boot. 
+Conforme o seu sistema operacional, acesse o drive chamdo `boot`.
 
-Para habilitar o acesso SSH, criar um arquivo vazio chamado `ssh`: 
+Para habilitar o acesso SSH, crie um arquivo vazio chamado `ssh`: 
 
 ```sh
 $ touch ssh 
@@ -113,7 +126,7 @@ $ sudo adduser secpi        # vai pedir a criação de uma nova senha. Para os o
 $ sudo adduser secpi sudo   # adiciona o usuário secpi ao grupo de sudoers 
 $ sudo usermod -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,spi,i2c,gpio secpi # adiciona secpi a outros grupos de administrador
 ```
-Guarde a senha do usuário recém criado. Após a execução destes comandos, o novo usuário `secpi` está criado, os acessos de administração estão concedidos e um novo diretório *home* está criado em `/home/secpi`. 
+Guarde a senha do usuário recém criado. Após a execução destes comandos, o novo usuário `secpi` está criado, os acessos de administração estão concedidos e um novo diretório *home* está disponível em `/home/secpi`. 
 
 Faça logout du usuário `pi`, e em seguida refaça login com o usuário recém criado, `secpi`. 
 
@@ -121,13 +134,17 @@ Faça logout du usuário `pi`, e em seguida refaça login com o usuário recém 
 $ logout 
 ```
 
-Ao terminar o logon, teste o acesso de administrador do usuário `secpi`: 
+Ao refazer o logon com o usuário `secpi`, teste o acesso de administrador do usuário: 
 
 ```sh
-$ sudo su
+$ sudo su 
+[sudo] password for secpi: 
+root@raspberry:/home/secpi# 
 ```
 
-Se tudo correr bem, o sistema fará uma primeira exortação sobre segurança, e transformará o shell do usuário em super-usuário. Desta forma, podemos proceder à supressão do usuário default `pi`. 
+Se tudo correr bem, o sistema fará uma primeira exortação sobre segurança, e transformará o shell do usuário em super-usuário (`root@...`). 
+
+Desta forma, podemos proceder à supressão do usuário default `pi`. 
 
 ## Apague o usuário default pi 
 
