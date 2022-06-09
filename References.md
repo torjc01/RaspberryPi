@@ -1,3 +1,7 @@
+![RaspPi](https://img.shields.io/badge/Raspberry%20Pi-Documentation-red)
+![GitHub](https://img.shields.io/github/license/mashape/apistatus)
+
+--- 
 # References
 
 How assign a local domain  
