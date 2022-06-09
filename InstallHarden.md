@@ -248,13 +248,17 @@ $ df -h    # compare with the space you had noted and behold the space freed! Th
 $ sudo raspi-config
 ```
 
-1 - System options 
-    S4 - Hostname 
-5 - Localisation
-    L1 - Locale
-    L2 - Timezone
-    L3 - Keyboard
-    L4 - Wireless country
+![raspi-config](./images/raspi-config.png)
+
+```
+1 - System options  
+    S4 - Hostname  
+5 - Localisation  
+    L1 - Locale  
+    L2 - Timezone  
+    L3 - Keyboard  
+    L4 - Wireless country  
+```
 
 # Keep the system updated
 
