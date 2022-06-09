@@ -1,3 +1,7 @@
+![RaspPi](https://img.shields.io/badge/Raspberry%20Pi-Documentation-red)
+![GitHub](https://img.shields.io/github/license/mashape/apistatus)
+
+--- 
 # Install and harden a headless RaspberryPi: From zero to hero 
 
 Seja para projetos de IOT, seja para utilização um servidor web, o raspberry pi é uma excelente plataforma para projetos e testes...
@@ -27,7 +31,7 @@ If your risk level isn’t very much, you’ll only have to follow only the firs
 
 ## Instalação
 
-Faça o download do Raspberry Pi Imager no computador local, de acordo com o sistema operacional. O Imager está  disponível à partir da Raspberry Pi Foundation.
+Faça o download do Raspberry Pi Imager no computador local, de acordo com o sistema operacional. O Imager está  disponível à partir da Rasgit push pberry Pi Foundation.
 
 https://www.raspberrypi.com/software/
 
@@ -40,13 +44,13 @@ Acompanhe a instalação
 Ao fim da instalação, ejetar o cartão SD e reconectá-lo ao computador. 
 
 
-### Configurar wifi e acesso remoto
+### Configure wifi e acesso remoto
 
 Acesse o drive chamdo boot. 
 
 Para habilitar o acesso SSH, criar um arquivo vazio chamado `ssh`: 
 
-```
+```sh
 $ touch ssh 
 ``` 
 
@@ -73,134 +77,24 @@ Insera o cartão no Raspberry Pi, espere alguns minutos até o sistema inicializ
 
 A senha do usuário default é `raspberry`. 
 
-## Descubra o endereço IP do seu Raspberry Pi
+Caso o device não seja localizado, verifique as alternativas para descobrir um Raspberry Pi em uma rede local no [Descubra o endereço IP do seu Raspberry Pi](./LocateRaspberryPiNetwork.md). 
 
-Uma vez logado no seu Raspberry, cheque o endereço IP do device. 
+## Realize a atualização inicial do Raspberry Pi 
 
-```
-hostname -I
-```
+É preciso atualizar a distribuição: aplicar patches de segurança, melhorias etc desde que a imagem do SO foi gerada. 
 
-`/usr/share/nmap/nmap-mac-prefixes`
-
-`DCA632` Raspberry Pi Trading   
-`E45F01` Raspberry Pi Trading  
-`B827EB` Raspberry Pi Foundation  
+Operação demorada, pode levar mais de 30 min dependendo do modelo de RPi que você possua. Tome um café. 
 
 
-## Alternartiva 1: `ping`
-
-O raspbian vem configurado com o hostname 
-
-```
-$ ping raspberry
-
-Pinging raspberry.lan [192.168.1.186] with 32 bytes of data:
-Reply from 192.168.1.186: bytes=32 time=2ms TTL=64
-Reply from 192.168.1.186: bytes=32 time=7ms TTL=64
-Reply from 192.168.1.186: bytes=32 time=3ms TTL=64
-Reply from 192.168.1.186: bytes=32 time=3ms TTL=64
-
-Ping statistics for 192.168.1.186:
-    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
-Approximate round trip times in milli-seconds:
-    Minimum = 2ms, Maximum = 7ms, Average = 3ms
-    
+```sh
+$ sudo apt-get update 
+$ sudo apt-get full-upgrade -y 
+$ sudo apt-get dist-upgrade -y
+$ sudo apt-get clean 
+$ sudo apt autoremove 
 ```
 
-## Alternativa 2: arp 
-
-The MAC Address, or Media Access Control Address, of a host, identifies the serial number of the Network Card. 
-This serial number can be traced back to a vendor. 
-For the Raspberry Pi Foundation, the MAC Address will begin with the characters B8:27:EB. 
-Scanning the network with nmap we can return hosts that are up and their MAC Address. 
-Make you are running the command as root or with sudo as the MAC Address is not returned if you run the command as a standard user. 
-I am using the address range 192.168.0.0/24 as that is the network that I have at home. You will need to adjust to match your network.
-
-```bash 
-$ arp -av
-
-Interface: 192.168.1.216 --- 0x12
-  Internet Address      Physical Address      Type
-  192.168.1.1           3c-90-66-98-0e-01     dynamic
-  192.168.1.123         00-00-00-00-00-00     invalid
-  192.168.1.135         dc-a6-32-4a-ed-f3     dynamic
-  192.168.1.147         00-00-00-00-00-00     invalid
-  192.168.1.176         ec-2c-e9-72-00-c2     dynamic
-  192.168.1.179         c8-3a-6b-e2-87-21     dynamic
-  192.168.1.185         00-00-00-00-00-00     invalid
-  192.168.1.186         dc-a6-32-1a-56-ec     dynamic
-  192.168.1.235         00-00-00-00-00-00     invalid
-  192.168.1.243         94-53-30-7d-d5-99     dynamic
-  192.168.1.255         ff-ff-ff-ff-ff-ff     static
-  
-```
-
-## Alternativa 3: nmap 
-
-NMAP or the Network Mapper is a tool originally developed in 1997 for Linux. 
-Availability is much better now with versions for OSX, Windows and Unix systems as well as the original Linux platform. 
-NMAP can be used by system administrators in locating threats on their network, but we will see how we can find my raspberry pi using NMAP. 
-Make sure that the host we install NMAP onto is on the same network as the Raspberry Pi need locating. 
-
-Instalar o nmap 
-
-```
-sudo apt-get install nmap
-```
-
-Verifique qual é a subnet da sua rede local. 
-
-```
-$ sudo nmap -sP 192.168.1.*/24
-
-Starting Nmap 7.70 ( https://nmap.org ) at 2022-05-26 15:42 EDT
-Nmap scan report for SR400ac-0E00.lan (192.168.1.1)
-Host is up (0.0017s latency).
-MAC Address: 3C:90:66:98:0E:01 (SmartRG)
-Nmap scan report for boaz.lan (192.168.1.135)
-Host is up (0.068s latency).
-MAC Address: DC:A6:32:4A:ED:F3 (Raspberry Pi Trading)
-Nmap scan report for Google-Nest-Mini.lan (192.168.1.147)
-Host is up (0.038s latency).
-MAC Address: CC:F4:11:C3:6F:5D (Google)
-Nmap scan report for Roomba-3162880C92435880.lan (192.168.1.156)
-Host is up (0.010s latency).
-MAC Address: 80:C5:F2:76:72:2C (AzureWave Technology)
-Nmap scan report for android-30b7ded2bf872b05.lan (192.168.1.176)
-Host is up (0.045s latency).
-MAC Address: EC:2C:E9:72:00:C2 (Unknown)
-Nmap scan report for Express.lan (192.168.1.179)
-Host is up (0.18s latency).
-MAC Address: C8:3A:6B:E2:87:21 (Roku)
-Nmap scan report for XboxOne.lan (192.168.1.199)
-Host is up (0.010s latency).
-MAC Address: C0:33:5E:8F:7D:D3 (Microsoft)
-Nmap scan report for moto-g-20.lan (192.168.1.206)
-Host is up (0.010s latency).
-MAC Address: 7E:FC:E5:63:C5:CE (Unknown)
-Nmap scan report for iPad.lan (192.168.1.209)
-Host is up (0.023s latency).
-MAC Address: FE:82:EA:68:57:7F (Unknown)
-Nmap scan report for HAL9000.lan (192.168.1.216)
-Host is up (0.19s latency).
-MAC Address: 14:F6:D8:EF:5D:76 (Intel Corporate)
-Nmap scan report for Galaxy-A7-2018.lan (192.168.1.230)
-Host is up (0.16s latency).
-MAC Address: 92:35:07:4C:F0:58 (Unknown)
-Nmap scan report for Google-Home-Mini.lan (192.168.1.235)
-Host is up (0.15s latency).
-MAC Address: E4:F0:42:36:1A:87 (Google)
-Nmap scan report for NPI074068.lan (192.168.1.243)
-Host is up (0.13s latency).
-MAC Address: 94:53:30:7D:D5:99 (Hon Hai Precision Ind.)
-Nmap scan report for jakin.lan (192.168.1.186)
-Host is up.
-Nmap done: 256 IP addresses (14 hosts up) scanned in 8.24 seconds
-
-# Alternativa com awk
-$ sudo nmap -sP 192.168.1.0/24 | awk '/^Nmap/{ipaddress=$NF}/DC:A6:32/{print ipaddress}'
-```
+Verifique o script [update-server.sh](./scripts/update-server.sh) para um exemplo de script de atualização que pode ser incluído na schedule via cron para sua execução cíclica. 
 
 # Assegure o acesso ao sistema 
 
@@ -212,57 +106,103 @@ Como nós lidaremos com a criação de usuários e com a troca de senhas, é rec
 
 O usuário default `pi` é inseguro porque ele é conhecido amplamente. Muitas tentativas de invasão de sistema começam exatamente explorando os usuários default dos sistemas. 
 
-Como exemplo nós criaremos um usuario chamado hackpi. 
+Como exemplo nós criaremos um usuario chamado `secpi`. 
 
+```sh
+$ sudo adduser secpi        # vai pedir a criação de uma nova senha. Para os outros campos, digite enter para aceitar o branco. 
+$ sudo adduser secpi sudo   # adiciona o usuário secpi ao grupo de sudoers 
+$ sudo usermod -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,spi,i2c,gpio secpi # adiciona secpi a outros grupos de administrador
 ```
-$ sudo adduser hackpi  - vai pedir a criação de uma nova senha. Para os outros campos, digite enter para aceitar o branco. 
-$ sudo adduser hackpi sudo 
-$ sudo usermod -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,spi,i2c,gpio hackpi
-```
-Guarde a senha do usuário recém criado. 
+Guarde a senha do usuário recém criado. Após a execução destes comandos, o novo usuário `secpi` está criado, os acessos de administração estão concedidos e um novo diretório *home* está criado em `/home/secpi`. 
 
+Faça logout du usuário `pi`, e em seguida refaça login com o usuário recém criado, `secpi`. 
 
-## Apague o usuário default pi 
-
-Faça logout du usuário `pi`, e em seguida refaça login com o usuário recém criado, `hackpi`. 
-
-```
+```sh
 $ logout 
 ```
 
-Faça a supressão do usuário default `pi`. 
+Ao terminar o logon, teste o acesso de administrador do usuário `secpi`: 
 
+```sh
+$ sudo su
 ```
-$ sudo deluser -remove-home pi (remove o usuario e o seu home)
+
+Se tudo correr bem, o sistema fará uma primeira exortação sobre segurança, e transformará o shell do usuário em super-usuário. Desta forma, podemos proceder à supressão do usuário default `pi`. 
+
+## Apague o usuário default pi 
+
+
+Execute o comando abaixo para fazer a supressão do usuário default `pi`: 
+
+```sh
+$ sudo deluser -remove-home pi  # remove o usuario e o seu home
 ```
 
 ## Troque a senha do usuário root 
 
 O usuário `root` tem privilégios elevados, e sua senha é de conhecimento público. Para assegurar sua conta, você deve alterar a senha do usuário root. 
 
-```bash 
+```sh 
 $ sudo passwd root
 ```
 Não se esqueça de manter um registro da senha do usuário root. 
+## Faça `sudo` exigir a senha do usuário
 
-## Impedir login do root via SSH 
+Edite o arquivo 
+```sh
+$ sudo nano /etc/sudoers.d/010_pi-nopasswd
+```
+Ache a linha: 
+
+`pi ALL=(ALL) NOPASSWD: ALL`
+
+e a substitua com a seguinte: 
+
+`pi ALL=(ALL) PASSWD: ALL`
+
+## Reconfigure as chaves do servidor SSH
+
+Reconfigure as chaves do servidor ssh apos uma reinstalacao.
+
+As chaves criadas por default do ssh sao evidentes e simples de serem atacadas. A reconfiguraçao apaga as chaves fracas e recria um conjunto de chaves mais seguras.
+
+Crie um diretorio de backup para guardar chaves antigas; mova as chaves para backup e as apague da configuração do servidor ssh: 
+
+```sh
+sudo mkdir /etc/ssh/oldkeys
+sudo cp /etc/ssh/ssh_host* /etc/ssh/oldkeys
+sudo rm -rf /etc/ssh/ssh_host*
+```
+
+Reconfigure as chaves do servidor ssh: 
+
+```sh
+sudo dpkg-reconfigure openssh-server
+```
+
+Reinicie o servico ssh: 
+
+```sh
+sudo service ssh restart
+```
+
+## Impeça login do root via SSH 
 
 Edite o arquivo `/etc/ssh/sshd_config` e localize a linha: 
 
-```
+```sh
 #PermitRootLogin prohibit-password  
 ```
 Descomente a linha e salve o arquivo. Restarte o servidor SSH: 
 
-```
+```sh
 sudo service ssh restart
 ```
 
-# Remove unnecessary programs 
-
-take a sample of the amount of space used in your partitions. Take note of the values. 
-```
-$ df -h
+# Remove unnecessary programs (stuff that is just nuisance )
+ 
+```sh
+$ df -h     # take note of the space available in your /dev/root partition
 
 Filesystem      Size  Used Avail Use% Mounted on
 /dev/root        14G  4.1G  9.4G  31% /
@@ -275,45 +215,38 @@ tmpfs           1.9G     0  1.9G   0% /sys/fs/cgroup
 tmpfs           384M     0  384M   0% /run/user/1001
 
 $ sudo apt-get remove --purge --assume-yes \
-scratch* \ 
+scratch* \
 libreoffice* \
 wolfram-engine* \
 sonic-pi \
 minecraft-pi 
 
+$ df -h    # compare with the space you had noted and behold the space freed! The difference is the space gained in this uncluttering action. 
 ```
-
-take another sample of space available. Compare with your notes and behold the space freed!
-
-
 
 
 # Configure the defaults 
 
-```
-sudo raspi-config
+```bash
+$ sudo raspi-config
 ```
 
 1 - System options 
- S4 - Hostname 
+    S4 - Hostname 
 5 - Localisation
- L1 - Locale
- L2 - Timezone
- L3 - Keyboard
- L4 - Wireless country
-
-
-
+    L1 - Locale
+    L2 - Timezone
+    L3 - Keyboard
+    L4 - Wireless country
 
 # Keep the system updated
 
-sudo apt-get update 
-
-sudo apt-get full-upgrade 
-
-sudo apt-get clean 
-
-sudo apt-get autoremove 
+```sh
+$ sudo apt-get update 
+$ sudo apt-get full-upgrade 
+$ sudo apt-get clean 
+$ sudo apt-get autoremove 
+```
 
 # Use of password 
 
@@ -348,15 +281,6 @@ sudo update-rc.d <service-name> remove
 To uninstall it
 sudo apt remove <service-name>
 
-# Make sudo require password 
-
-edit the file 
-sudo nano /etc/sudoers.d/010_pi-nopasswd
-
-Find the line: 
-pi ALL=(ALL) NOPASSWD: ALL
-replace with 
-pi ALL=(ALL) PASSWD: ALL
 
 
 
@@ -421,7 +345,7 @@ ftp ==> sftp
 
 # Protect the physical access
 
-# check the logs regularly
+# Check the logs regularly
 
 `/var/log/syslog`: main log file for all services.  
 `/var/log/message`: whole systems log file.  
@@ -436,154 +360,3 @@ Extra activity: install and integrate its logs to a log observer solution, like 
 CVE Details  
 Exploit DB  
 NVD Feeds  
-
-
-## Remove stuff that is just nuisance and add meaningful stuff
- 
-```
-df -h
-
-sudo apt-get remove --purge --assume-yes \
-scratch* \ 
-libreoffice* \
-wolfram-engine* \
-sonic-pi \
-minecraft-pi 
-
-df -h
-
-sudo apt-get update 
-sudo apt-get full-upgrade 
-
-sudo apt-get install --assume-yes \
-nano \
-mcrypt \
-nasm \
-curl \
-wget \
-hexdump \
-avahi-daemon \ 
-git \  
-jq \  
-zsh \  
-```
-
-## Utilities
-
-### NodeJS 
-
-### NPM 
-
-### NGrok 
-
-### Mosquitto Broker
-
-### MySQL Server / MariaDB
-
-### COBOL 
-
-```
-sudo apt-get install open-cobol 
-```
-
-Program 
-```COBOL
-    IDENTIFICATION DIVISION.
-
-    PROGRAM-ID. HelloWorld.
-
-    DATA DIVISION.
-
-    PROCEDURE DIVISION.
-
-    MAIN-PARAGRAPH.
-
-        DISPLAY "Hello World".
-
-        STOP RUN.
-
-```
-
-Compilation 
-
-```
-cobc -x -o hello HelloWorld.cbl
-```
-
-
-### Free Pascal 
-
-https://www.freepascal.org/down/arm/linux-canada.html
-
-ftp://mirror.freemirror.org/pub/fpc/dist/3.2.2/arm-linux/fpc-3.2.2.arm-linux-eabihf-raspberry.tar
-
-fpc-3.2.2.arm-linux-eabihf-raspberry.tar (56 MB) contains a standard tar archive, with an install script.  
-After untarring the archive, you can run the install script in the created directory by issuing the command `sh install.sh`.
-
-```
-cd /tmp 
-mkdir pascal 
-cd pascal 
-wget ftp://mirror.freemirror.org/pub/fpc/dist/3.2.2/arm-linux/fpc-3.2.2.arm-linux-eabihf-raspberry.tar
-
-tar-xvf fpc-3.2.2.arm-linux-eabihf-raspberry.tar
-```
-
-### Lua 
-
-```
-sudo apt-get update
-sudo apt-get install lua5.1
-sudo apt-get install liblua5.1-0-dev -- development files, need by LuaRocks
-sudo apt-get install lua-socket
-sudo apt-get install luarocks -- package manager for Lua modules
-
-sudo luarocks install luasocket
-```
-
-
-### Fortran 
-
-Install Fortran 90 opensource port, GFortran
-
-```
-sudo apt-get install gfortran 
-````
-
-Hello World program 
-
-```Fortran
-program helloworld 
-print *,"Hello World"
-end program helloworld
-```
-
-Compilation 
-
-```
-gfortran -o helloworld ./helloworld.f90
-```
-
-### ADA 
-
-```
-sudo apt-get install gnat
-```  
-
-Hello World 
-
- 
- helloworld.adb
- 
-```ADA
--- First ADA program
-with Ada.Text_IO;
-use Ada.Text_IO;
-procedure HelloWorld is
-begin
-    Put_Line("Hello World"); 
-end HelloWorld;
-```
-
-Compile 
-gnat compile helloworld.adb 
