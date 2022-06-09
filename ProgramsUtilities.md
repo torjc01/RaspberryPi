@@ -102,9 +102,9 @@ $ cd ~ & rm -rf /tmp/pascal
 ```sh
 $ sudo apt-get update
 $ sudo apt-get install lua5.1
-$ sudo apt-get install liblua5.1-0-dev -- development files, need by LuaRocks
+$ sudo apt-get install liblua5.1-0-dev    # development files, need by LuaRocks
 $ sudo apt-get install lua-socket
-$ sudo apt-get install luarocks -- package manager for Lua modules
+$ sudo apt-get install luarocks           # package manager for Lua modules
 
 $ sudo luarocks install luasocket
 ```
