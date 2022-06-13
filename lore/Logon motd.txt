@@ -20,10 +20,10 @@ $sudo systemctl restart ssh
 
 
 *===========================*
-* Welcome to sub.zero.ca * 
+* Welcome to xxxxxxxxxxx.ca * 
 *===========================*
 WARNING:
-For him who steal,  hack or connect  without permission to this server, in spite 
+For him who steal, hack  or connect  without permission to this server, in spite 
 of its  rightful  owner, let him be  struck with  palsy, and all his  members be 
 blasted.  Let him l anguish in  pain crying aloud for mercy, and let there be no 
 surcesase to his  agony till he  sinks to  dissolution. Let  book-worms gnaw his 
