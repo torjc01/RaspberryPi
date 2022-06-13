@@ -112,16 +112,16 @@ Altere o seu hostname para diferenciá-lo dos seus outros hosts, e também como 
 
 Aqui alteraremos o nome do host para `dev01.secpi`. 
 
-```
+```sh 
 # hostnamectl set-hostname <nome do servidor>
-# $ hostnamectl set-hostname dev01.secpi
+$ hostnamectl set-hostname dev01.secpi
 ```
 
 Altere o arquivo `/etc/hosts` para incluir o novo hostname. Por exemplo: 
 
 ```
-127.0.0.1	      localhost    dev01.secpi
-192.168.1.100   dev01.secpi
+127.0.0.1        localhost    dev01.secpi
+192.168.1.100    dev01.secpi
 ```
 
 
