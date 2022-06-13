@@ -20,6 +20,7 @@ sudo apt-get full-upgrade
 sudo apt-get install --assume-yes \
 nano \
 mcrypt \
+sendmail \
 nasm \
 curl \
 wget \
