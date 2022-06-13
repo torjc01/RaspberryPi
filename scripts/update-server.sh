@@ -18,7 +18,7 @@ echo "===========>>>>>>>>>> UPDATE" >> $tmp
 sudo apt-get update -y >> $tmp
 # Atualiza os softwares que necessitem
 echo "===========>>>>>>>>>> UPGRADE" >> $tmp
-sudo apt-get upgrade -y >> $tmp
+sudo apt-get full-upgrade -y >> $tmp
 # Faz upgrade da versao da distribuicao do sistema operacional
 echo "==========>>>>>>>>>> UPGRADE DIST" >> $tmp
 sudo apt-get dist-upgrade -y >> $tmp
@@ -29,7 +29,7 @@ echo $tmp
 /usr/sbin/sendmail -oi juliozohar@gmail.com << EOF
 From: kryptogarten@gmail.com
 To: juliozohar@gmail.com
-Subject: SERVER INFO: Atualizacao dos softwares do servidor ($DATA)
+Subject: SERVER INFO: Atualizacao dos softwares do servidor em ($DATA)
 
 O servidor $NAME acabou de sofrer as atualizacoes de software agendadas,
 em $DATE, no IP $IP.
