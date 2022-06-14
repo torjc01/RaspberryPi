@@ -220,6 +220,12 @@ $ sudo nano /etc/sudoers.d/010_pi-nopasswd
 Todos os usuários que tem poderes de sudo terão uma linha neste arquivo.  Substitua `secpi ALL=(ALL) NOPASSWD: ALL` com o seguinte `secpi ALL=(ALL) PASSWD: ALL`. 
 
 # Configurações do SSH Server 
+
+Por padrão, a autenticação de senha é usada para se conectar à sua instância de computação via SSH. 
+
+Um par de chaves criptográficas é mais seguro porque uma chave privada substitui uma senha, que geralmente é muito mais difícil de descriptografar por força bruta. 
+
+Nesta seção, criaremos um par de chaves e configuraremos seu sistema para não aceitar senhas para logins SSH.
 ## Reconfigure as chaves do servidor SSH
 
 Reconfigure as chaves do servidor ssh apos uma reinstalacao.
@@ -504,22 +510,58 @@ $ sudo ufw status verbose
 Status: inactive
 ```
 
+Devemos então habilitar o firewall com o comando seguinte, que também o ativará após reinicialização no boot. 
+
+```
+$ sudo ufw enable
+```
+
+Se precisarmos desativar o firewall por algum motivo, a opção disable vai desabilitar o firewall e o impedirá de ser ativado após a reinicialização no boot. 
+
+## Regras default do UFW
+
+Por default, o UFW bloqueia toda conexão entrando e somente permite as conexões saindo do servidor. Isso significa que ninguém pode acessar seu servidor, a menos que você abra especificamente a porta, enquanto todos os serviços ou aplicações no seu servidor serão capazes de acessar a rede externa. 
+
+As regras default do UFW estão no arquivo `/etc/default/ufw`.
+
+## Uso básico do UFW
+
+**Listar perfis de aplicação disponíveis** : 
+```sh
+$ sudo ufw app list 
+```
+
+**Habilitar um perfil de aplicação** : 
+```sh
+$ sudo ufw allow "OpenSSH"
+```
+
+**Permitir toda conexão http** :  
+```sh
+$ sudo ufw allow http    # ou sudo ufw allow 80  
+$ sudo ufw allow https   # ou sudo ufw allow 443   
+```
+
+**Bloquear o envio de email**  
+```sh
+$ sudo ufw deny out 25  
+```
 
 
-Allow apache for anyone 
+## Sugestão de regras a serem utilizadas no UFW 
 
-sudo ufw allow 80  
-sudo ufw allow 443
+```sh
+$ sudo ufw default allow outgoing  # permite todas as conexões entrando
+$ sudo ufw default deny incoming   # nega todas as conexões saindo 
+$ sudo ufw allow ssh               # permite o serviço ssh (porta default 22)
+```
 
-Allow ssh for an ip address only  
-sudo ufw allow from 192.168.1.100 port 22
 
-Enable the firewall   
-sudo ufw enable 
+Para mais detalhes de utilização do UFW, por favor veja a [página man UFW](http://manpages.ubuntu.com/manpages/bionic/man8/ufw.8.html), ou no sistema Linux pelo comando 
 
-Check everything works fine 
-
-sudo ufw status verbose
+```sh
+man ufw 
+```
 
 
 # Check os logs regularmente
