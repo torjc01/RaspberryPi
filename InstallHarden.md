@@ -4,34 +4,37 @@
 --- 
 # Install and harden a headless RaspberryPi: From zero to hero 
 
-Seja para projetos de IOT, seja para utilização um servidor web, o raspberry pi é uma excelente plataforma para projetos e testes...
+Seja para projetos de IOT, seja para utilização um servidor web, ou para qualquer outra utilização que precise de um servidor unix completo, o raspberry pi é uma excelente plataforma para testes, experimentações e projetos. 
 
-Eu utilizo a plataforma como base de servidores de teste para 
+Eu utilizo a plataforma como a principal ferramenta de experimentação e prova de conceito antes de mover projetos para uma estrutura mais parruda. 
 
-Quite often you might want to run a ‘headless’ Raspberry Pi without a screen or keyboard, using SSH to connect. SSH can be enabled in the config menu when you first boot the Pi. 
+E em grande parte das situações, quando o escopo do projeto não é grande, o próprio Raspberry Pi é adequado para servir como o servidor de produção. 
 
-Raspberry Pi comes with poor security by default. If you use it at home or in a small network, it isn’t a big deal, but if you open ports on the Internet, use it as a Wi-Fi access point, or if you install it on a larger network, you need to take security measures to protect your Raspberry Pi. In this article, I’ll show you everything I do with my Linux servers at work to keep them safe.
+Frequentemente, você pode querer rodar o Raspberry Pi em modo 'headless`, sem monitor ou teclado, utilisando SSH para se conectar diretamente a ele. 
 
-Improving the security on a Raspberry Pi is similar to any other Linux device. There are logical steps, like using a strong password. And there are also more complex steps like detecting attacks or using encryption.
+O Raspberry Pi vem com a segurança baixa, por default. Se você estiver o utilizando em casa ou numa rede pequena, isso não é um grande problema, mas se você abrir suas portas para a internet, usá-lo como access point Wi-Fi ou se você o instalar em uma rede maior, você precisa tomar medidas de segurança para proteger seu Raspberry Pi. Neste guia, mostrarei tudo o que faço com os meus servidores Linux para mantê-los em segurança. 
 
-I’ll share some security tips that you should follow to get higher security for your Raspberry Pi (and they mostly apply to all Linux systems). If you are just using your Raspberry Pi at home, try to apply the first tips at the very least. Follow all of the tips included for a more critical setup, with Internet access or on a larger network.
+Melhorar a segurança no Raspberry Pi é similar em qualquer outro dispositivo Linux. Há os passos lógicos, como utilizar uma senha forte. E também há os passos mais complexos, como detectar ataques ou usar criptografia. 
 
-I selected 17 main security tips, which apply to everyone who hosts a Raspberry Pi and share services on it. I have been a system administrator for 20 years, and these are the tips I apply to any new server installation.
+Vou compartilhar algumas dicas de segurança que você deve seguir para obter uma segurança maior para o seu Raspberry Pi (e quase todas elas se aplicam a qualquer distribuição Linux). Se você está só usando o seu Raspberry Pi em casa, tente ao menos aplicar as primeiras dicas, de segurança de contas de usuário, pelo ao menos. Siga todas as dicas incluídas para um setup mais robusto, para expor à internet ou a uma rede mais abrangente. 
 
-They are in order of risk level. If you think you are highly exposed, follow all the steps, and you’ll be safe.
-If your risk level isn’t very much, you’ll only have to follow only the first steps.
+Eu selecionei as dicas de segurança que se aplicam a todos que hospedam um Raspberry Pi e compartilham serviços nele. Eu utilizo a plataforma há vários anos, e estas são as dicas que eu aplico a qualquer nova instalação de servidor. 
+
+Elas estão em ordem de nível de risco. Se você acha que está altamente exposto, siga todos os passos, e você estará seguro. 
+
+Se o seu nível de risco não é muito grande, você só precisará seguir os primeiros passos. 
 
 # Instalação
 ## Pré-requisitos
 
-- Raspberry Pi;
-- MicroSD Card (recomendado ao menos 16Gb, SD10); 
-- Adaptador de cartão SD
-- Raspberry Pi fonte 
+- Raspberry Pi  
+- MicroSD Card (recomendado ao menos 16Gb, SD10)  
+- Adaptador de cartão SD  
+- Fonte de energia compatível com seu modelo de Raspberry Pi  
 
-## Download e gravação da imagem
+## Faça o download e a gravação da imagem
 
-Faça o download do Raspberry Pi Imager no computador local, de acordo com o sistema operacional. O Imager está  disponível à partir da Rasgit push pberry Pi Foundation.
+Faça o download do Raspberry Pi Imager no computador local, de acordo com o sistema operacional. O Imager está  disponível à partir da Raspberry Pi Foundation.
 
 https://www.raspberrypi.com/software/
 
@@ -108,9 +111,14 @@ Verifique o script [update-server.sh](./scripts/update-server.sh) para um exempl
 
 ## Altere o seu `hostname`
 
-Altere o seu hostname para diferenciá-lo dos seus outros hosts, e também como uma maneira de ... 
+Um hostname é usado para identificar o seu servidor usando um nome fácil de se lembrar. Ele pode ser descritivo ou estruturado (detalhando para que o sistema é usado) ou pode ser uma palavra ou frase genérica. Veja alguns exemplos: 
 
-Aqui alteraremos o nome do host para `dev01.secpi`. 
+- `Descritivo e/ou estruturado`: `web`, `staging`, `blog`, ou algo mais estruturado como [proposito]-[numero]-[ambiente], p.ex. `web-01-prod`. 
+- Genérico ou séries: Tal como o nome de frutas (`maça, melancia`), rios (`amazonas, saofrancisco, xingu`), planetas (`mercurio, venus`), etc. 
+
+O hostname pode ser usado como parte de um `FQDN (fully qualified domain name)` para o seu sistema (p.ex.: `web-01-prod.seusite.com.br`).
+
+Neste guia alteraremos o nome do host para `dev01.secpi`. 
 
 ```sh 
 # hostnamectl set-hostname <nome do servidor>
@@ -124,6 +132,7 @@ Altere o arquivo `/etc/hosts` para incluir o novo hostname. Por exemplo:
 192.168.1.100    dev01.secpi
 ```
 
+Após você ter feito estas alterações, você precisa fazer `logout` e fazer login novamente para ver o prompt do seu terminal mudar de `raspberry` para seu novo hostname.  O comando `hostname` assim como o comando `hostnamectl` também devem mostrar corretamente o seu novo hostname. 
 
 ## Configure os defaults de localização do sistema
 
@@ -145,7 +154,7 @@ Entre nas opções seguintes e configure conforme as suas preferências:
     L4 - Wireless country  
 ```
 
-# Assegure o acesso ao sistema 
+# Assegure as contas de acesso ao sistema 
 
 O acesso ao sistema se dá por meio de contas de usuários que devem ser geridas e acompanhadas. 
 
@@ -183,7 +192,7 @@ Se tudo correr bem, o sistema fará uma primeira exortação sobre segurança, e
 
 Desta forma, podemos proceder à supressão do usuário default `pi`. 
 
-## Apague o usuário default pi 
+## Apague o usuário default `pi` 
 
 Execute o comando abaixo para fazer a supressão do usuário default `pi`: 
 
@@ -191,7 +200,7 @@ Execute o comando abaixo para fazer a supressão do usuário default `pi`:
 $ sudo deluser -remove-home pi  # remove o usuario e o seu home
 ```
 
-## Troque a senha do usuário root 
+## Troque a senha do usuário `root` 
 
 O usuário `root` tem privilégios elevados, e sua senha é de conhecimento público. Para assegurar sua conta, você deve alterar a senha do usuário `root`. 
 
@@ -210,6 +219,7 @@ $ sudo nano /etc/sudoers.d/010_pi-nopasswd
 ```
 Todos os usuários que tem poderes de sudo terão uma linha neste arquivo.  Substitua `secpi ALL=(ALL) NOPASSWD: ALL` com o seguinte `secpi ALL=(ALL) PASSWD: ALL`. 
 
+# Configurações do SSH Server 
 ## Reconfigure as chaves do servidor SSH
 
 Reconfigure as chaves do servidor ssh apos uma reinstalacao.
@@ -219,21 +229,21 @@ As chaves criadas por default do ssh sao evidentes e simples de serem atacadas. 
 Crie um diretorio de backup para guardar chaves antigas; mova as chaves para backup e as apague da configuração do servidor ssh: 
 
 ```sh
-sudo mkdir /etc/ssh/oldkeys
-sudo cp /etc/ssh/ssh_host* /etc/ssh/oldkeys
-sudo rm -rf /etc/ssh/ssh_host*
+$ sudo mkdir /etc/ssh/oldkeys
+$ sudo cp /etc/ssh/ssh_host* /etc/ssh/oldkeys
+$ sudo rm -rf /etc/ssh/ssh_host*
 ```
 
 Reconfigure as chaves do servidor ssh: 
 
 ```sh
-sudo dpkg-reconfigure openssh-server
+$ sudo dpkg-reconfigure openssh-server
 ```
 
 Reinicie o servico ssh: 
 
 ```sh
-sudo service ssh restart
+$ sudo service ssh restart
 ```
 
 ## Impeça login do root via SSH 
@@ -246,20 +256,19 @@ Edite o arquivo `/etc/ssh/sshd_config` e localize a linha:
 Descomente a linha e salve o arquivo. Restarte o servidor SSH: 
 
 ```sh
-sudo service ssh restart
+$ sudo service ssh restart
 ```
 
-# Exija ssh-keys para fazer login  
+## Exija ssh-keys para fazer login  
 
-## Crie nova chave para acesso sem senha 
+### Crie nova chave para acesso sem senha 
 
 No Raspberry Pi, verificar se o diretório `.ssh` já existe com as autorizações corretas de acesso. Caso negativo, crie o diretório e atribua as autorizações necessárias: 
 
-```
+```sh
 $ mkdir /home/secpi/.ssh
 $ mkdir /home/scepi/.ssh/authorized_keys
 $ chmod 700 /home/secpi/.ssh
-$ chown secpi:secpi /home/secpi/.ssh/sshd_config 
 ```
 
 A partir do computador de onde você irá se conectar ao RPi headless, crie uma nova chave ssh para o acesso sem senha (supondo que você utilize Linux ou Mac): 
@@ -278,9 +287,9 @@ Para verificar, rode o comando seguinte:
 $ ls ~/.ssh
 ```
 
-## Instale a chave pública no raspberry pi 
+### Instale a chave pública no Raspberry Pi 
 
-Copie a chave pública gerada para o Raspberry Pi, sob o diretório chamado authorized_keys. 
+Copie a chave pública gerada para o Raspberry Pi para o diretório `~/.ssh`. 
 
 ```sh
 $ #scp ~/.ssh/id_rsa.pub secpi@secpi:/home/secpi/.ssh/authorized_keys
@@ -289,7 +298,7 @@ $ ssh-copy-id -i ~/.ssh/secpi_id_rsa.pub secpi@secpi-ip-address
 
 Um arquivo chamado `authorized_keys` foi criado no diretório `.ssh` do seu usuário. Este arquivo é a chave pública que acabou de ser criada. 
 
-## Desabilite a autenticação por senha 
+### Desabilite a autenticação por senha 
 Usar autenticação baseada em senha é perigoso, especialmente se você planeja expor o Raspberry Pi em uma rede pública, como a internet. Por isso, você deve desabilitar a autenticação ssh e usar 
 Esta etapa garante que não seja possível fazer logon sem o uso do par de chaves, inibindo toda tentativa de logon com a utilização de usuário. 
 
@@ -321,7 +330,7 @@ $ ssh secpi@secpi-ip-address -o PubKeyAuthentication=no
 ```
 Você deve receber a mensagem de erro `Permission denied (publickey)`. 
 
-## Determine quais usuários podem fazer logon via ssh (whitelist)
+### Determine quais usuários podem fazer logon via ssh e quais estão proibidos (whitelist / blacklist)
 
 Para criar uma lista de permissão / proibição de logon via ssh ao sistema, edite o arquivo `/etc/ssh/sshd_config`. 
 
@@ -344,7 +353,7 @@ Após edição do arquivo, salvar e reiniciar o daemon SSH
 $ sudo systemctl restart ssh 
 ```
 
-## Opcional: configure o SSH no cliente para acesso fácil 
+### Opcional 1: configure o SSH no cliente para acesso fácil 
 
 Depois de configurar e instalar as chaves ssh entre o seu computador e o Raspberry Pi, você é capaz de se conectar via SSH sem utilização de senha. 
 
@@ -373,7 +382,7 @@ Salve e feche o arquivo, a partir de agora você é capaz de se conectar ao seu 
 $ ssh dev01.secpi
 ```
 
-## Opcional2: Mude a porta default do SSH (não é realmente efetivo)
+### Opcional 2: mude a porta default do SSH (não é realmente efetivo)
 
 É inefetivo pois um simples nmap na máquina revela o serviço e a porta não standard. 
 
@@ -397,8 +406,13 @@ Antes de fechar a sessão atual, abra outro terminal e tente se conectar à nova
 
 # Remova elementos não necessários do sistema
 
+Ao remover os elementos não necessários do seu sistema, i.e., aplicações, protocolos, programas, serviços, dependências, etc... de modo a diminuir a `superfície de ataque` disponível para ser explorada por atacantes do seu sistema. 
+
+#TODO : descrever o conceito de superfície de ataque. 
 ## Remova programas desnecessários (coisas que são inutilidades)
  
+#TODO : Justificar a remoção dos programas
+
 ```sh
 $ df -h     # tome nota do espaço utilizado na sua partição /dev/root 
 
@@ -425,6 +439,7 @@ $ df -h    # compare com o espaço que você havia anotado e admire o espaço li
 
 ## Remova serviços desnecessários ou inseguros 
 
+#TODO : Justificar a remoção dos serviços
 
 Liste os serviços que estão rodando: 
 
@@ -454,6 +469,8 @@ sudo apt remove <service-name>
 
 ## Remova os protocolos desnecessários ou inseguros 
 
+#TODO : Justificar a remoção dos programas
+
 Troque os protocolos fracos pour outros melhores : 
 http ==> https
 telnet ==> ssh 
@@ -463,6 +480,47 @@ ftp ==> sftp
 $ sudo apt-get remove telnet tftp ftp 
 $ sudo apt-get autoremove
 ```
+
+# Instale um firewall 
+
+Um firewall que funcione corretamente é a parte crucial de uma configuração completa de segurança de um sistema Linux. 
+
+Por default, as distribuições Ubuntu e Debian vem com uma ferramenta de configuração de firewall chamada `UFW (Uncomplicated Firewall)`, que é a ferramenta mais popular e de utilização simples para configuração e gestão de firewall no Linux. O UFW roda em cima de iptables, incluído na maioria das distribuições Linux. 
+
+Ele fornece uma interface simplificada para configurar casos de uso de firewall comuns por meio da linha de comando.
+
+O Raspbery Pi OS não inclui o UFW instalado na distribuição, então inicialmente devemos isntalá-lo. 
+
+```sh
+$ sudo apt-get install ufw 
+```
+
+Após a instalação, o firewall está desabilitado por default.  
+
+Você pode checar o status do UFW com o comando abaixo, e deverá receber como resposta `Status: inactive`. 
+
+```sh
+$ sudo ufw status verbose 
+Status: inactive
+```
+
+
+
+Allow apache for anyone 
+
+sudo ufw allow 80  
+sudo ufw allow 443
+
+Allow ssh for an ip address only  
+sudo ufw allow from 192.168.1.100 port 22
+
+Enable the firewall   
+sudo ufw enable 
+
+Check everything works fine 
+
+sudo ufw status verbose
+
 
 # Check os logs regularmente
 
@@ -476,12 +534,23 @@ Procure consultar também os arquivos de log de todas as suas aplicações crít
  
 Atividade extra: instale uma solução de `log observer` e integre todos os logs dos seus sistemas neles, como o `ELK Stack` ou `Splunk`. 
 
+# Proteja o acesso físico ao Raspberry Pi
+
+# Esteja em dia com as notícias de segurança e as bases de vulnerabilidade
+
+[CVE Details](https://www.cvedetails.com/)  
+[Exploit DB](https://www.exploit-db.com/)  
+[NVD Feeds](https://nvd.nist.gov/vuln/data-feeds)  
+[The Hacker News](https://thehackernews.com/)  
+
+
 # Boas práticas 
 
 - Tenha um registro onde salvar as informações relevantes da configuração, `ServerLog`. Nome de servidor, endereços IP, senhas do usuário e de aplicativos. 
   Faça o registro em um gestor de configuração, em um gestor de senhas, ou ao menos em um caderno offline. 
 - Não use auto-login nem senhas vazias; 
 - Prefira passphrases com strings longas - são mais fáceis de se lembrar, e mais difíceis de serem quebradas. Veja [correct horse battery staple](https://xkcd.com/936/). 
+- Acompanhe as notícias sobre vulnerabilidades e exploits, e aja caso seu sistema for afetado
 
 
 ---
@@ -499,24 +568,7 @@ sudo nano /etc/fail2ban/jail.conf
 
 sudo service fail2ban restart
 
-# Install a firewall 
 
-sudo apt-get install ufw 
-
-Allow apache for anyone 
-
-sudo ufw allow 80  
-sudo ufw allow 443
-
-Allow ssh for an ip address only  
-sudo ufw allow from 192.168.1.100 port 22
-
-Enable the firewall   
-sudo ufw enable 
-
-Check everything works fine 
-
-sudo ufw status verbose
 
 # Backup your data 
 
@@ -526,12 +578,3 @@ sudo ufw status verbose
 
 # Use a VPN 
 
-# Protect the physical access
-
-
-
-# Read the news 
-
-CVE Details  
-Exploit DB  
-NVD Feeds  
