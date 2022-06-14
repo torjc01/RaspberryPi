@@ -15,5 +15,4 @@ Repository for documenting technical data on Raspberry Pi.
 
 Uma das minhas referências preferidas é o livro [Learning Computer Architecture with Raspberry Pi, de Eben Upton](https://www.wiley.com/en-us/Learning+Computer+Architecture+with+Raspberry+Pi-p-9781119183938), co-criador do Raspberry Pi. 
 
-![Learning Computer Architecture](./images/learning.png | width=200)
-
+<img src="./images/learning.png" width="400">
