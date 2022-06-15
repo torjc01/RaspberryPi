@@ -6,7 +6,7 @@
     <img src="./images/raspberrypiLogo.png" width=200/>
 </div>
 
-# Installation et sécurisation d'un RaspberryPi `headless`: de zero à hero 
+# Installation et sécurisation d'un RaspberryPi `headless`: de zéro à héro 
 
 Que ce soit pour les projets IOT, pour l'utilisation d'un serveur Web ou pour toute autre utilisation qui nécessite un serveur unix complet, Raspberry Pi est une excellente plateforme pour les tests, l'expérimentation et les projets.
 
