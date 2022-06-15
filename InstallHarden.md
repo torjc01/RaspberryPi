@@ -203,7 +203,7 @@ Faça logout du usuário `pi`, e em seguida refaça login com o usuário recém 
 $ logout 
 ```
 
-Ao refazer o logon com o usuário `secpi`, teste o acesso de administrador do usuário: 
+Ao refazer o logon com o usuário `secpi`, teste o acesso de administrador do usuário. Se tudo correr bem, o sistema fará uma primeira exortação sobre segurança, e transformará o shell do usuário em super-usuário (`root@dev-01-secpi`).
 
 ```sh
 secpi@dev-01-secpi:~ $ sudo su
@@ -219,7 +219,7 @@ Administrator. It usually boils down to these three things:
 root@dev-01-secpi:/home/secpi# 
 ```
 
-Se tudo correr bem, o sistema fará uma primeira exortação sobre segurança, e transformará o shell do usuário em super-usuário (`root@dev-01-secpi`). Saia do usuário `root` com o comando 
+ Saia do usuário `root` com o comando 
 
 ```sh
 $ exit 
@@ -476,7 +476,7 @@ Antes de fechar a sessão atual, abra outro terminal e tente se conectar à nova
 
 # Remova elementos não necessários do sistema
 
-Ao remover os elementos não necessários do seu sistema, i.e., aplicações, protocolos, programas, serviços, dependências, etc... de modo a diminuir a `superfície de ataque` disponível para ser explorada por atacantes do seu sistema. 
+Ao remover os elementos não necessários do seu sistema, i.e., aplicações, protocolos, programas, serviços, dependências, etc... de modo a diminuir a **superfície de ataque** disponível para ser explorada por atacantes do seu sistema. 
 
 #TODO : descrever o conceito de superfície de ataque. 
 ## Remova programas desnecessários (coisas que são inutilidades)
@@ -504,7 +504,8 @@ sonic-pi \
 minecraft-pi 
 
 #sudo apt-get remove --purge --assume-yes scratch* libreoffice* wolfram-engine* sonic-pi minecraft-pi 
-$ df -h    # compare com o espaço que você havia anotado e admire o espaço liberado! A diferença é o espaço total ganho nesta ação de liberação de espaço. 
+$ df -h    # Compare com o espaço que você havia anotado e admire o espaço liberado! s
+           # A diferença é o espaço total ganho nesta ação de liberação de espaço. 
  
 ```
 
@@ -649,15 +650,16 @@ man ufw
 
 # Check os logs regularmente
 
-A administração do sistema supõe que os logs sejam lidos e acompanhados para 
+A administração do sistema supõe que os logs sejam lidos e acompanhados regularmente para a detecção precoce de erros, de atividades anormais e indícios de ataques no sistema. 
 
-`/var/log/syslog`:   Log file principal para todos os serviços 
-`/var/log/message`:  Log file de mensagens.
-`/var/log/auth.log`: Todas as tentativas de autenticação se encontram aqui. 
-`/var/log/mail.log`: Logs das mensagens de email 
+`/var/log/auth.log`: Todas as tentativas de autenticação se encontram aqui  
+`/var/log/message`:  Log file de mensagens de aplicações  
+`/var/log/syslog`:   Log file principal para todos os serviços executados no sistema  
+`/var/log/mail.log`: Logs das mensagens de email  
+
 Procure consultar também os arquivos de log de todas as suas aplicações críticas, como por exemplo do Apache Webserver `/var/log/apache2/error.log` ou  do MySQL Server`/var/log/mysql/error.log`.
  
-Atividade extra: instale uma solução de agregação de dados e integre todos os logs dos seus sistemas neles, como o `ELK Stack` ou `Splunk`. 
+**Atividade extra:** instale uma solução de agregação de dados e integre todos os logs dos seus sistemas neles, como o `ELK Stack` ou `Splunk`. 
 
 # Proteja o acesso físico ao Raspberry Pi
 
