@@ -462,7 +462,7 @@ Enregistrez et fermez le fichier, à partir de maintenant vous pouvez vous conne
 $ ssh secpi
 ```
 
-# Supprimez les éléments inutiles du système
+# Allégez l’installation du système
 
 En supprimant les éléments inutiles de votre système, c'est-à-dire les applications, les protocoles, les programmes, les services, les dépendances, etc, afin de diminuer la **surface d'attaque** disponible pour que les attaquants exploitent votre système.
 
@@ -616,7 +616,7 @@ Vérifiez également les fichiers journaux de toutes vos applications critiques,
  
 **Activité supplémentaire :** installez une solution d'agrégation de données, tel que `ELK Stack` ou `Splunk` et intégrez-y tous vos journaux de système.
 
-# Accès physique sécurisé à Raspberry Pi
+# Protégez l'accès physique au Raspberry Pi
 
 La sécurité physique est une pratique essentielle pour empêcher les personnes non autorisées d'entrer dans votre domicile ou votre entreprise et de causer des dommages, de protéger votre propriété intellectuelle contre l'espionnage d'entreprise, entre autres préoccupations. Une solide stratégie de cybersécurité protège les données sensibles que les systèmes physiques conservent.
 
@@ -631,7 +631,7 @@ Dès qu'un appareil est connecté au réseau, il devient une surface d'attaque p
 [NVD Feeds](https://nvd.nist.gov/vuln/data-feeds)  
 [The Hacker News](https://thehackernews.com/)  
 
-# Bonnes pratiques
+# Bonnes pratiques générales 
 
 - Avoir un journal où enregistrer les informations de configuration pertinentes, dans un `ServerLog`. Enregistrez tout ce que sera important, tel que le nom du serveur, les adresses IP, les mots de passe utilisateur et application, etc.
 - Enregistrez-vous dans un gestionnaire de configuration, dans un gestionnaire de mots de passe ou au moins dans un bloc-notes hors ligne.
