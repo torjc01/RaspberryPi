@@ -6,7 +6,7 @@
   <img src="./images/raspberrypiLogo.png" width=200/>
 </div>
 
-# Install and harden a headless RaspberryPi: From zero to hero 
+# Instalação do sistema operacional e hardening de um RPi headless: from zero to hero
 
 Seja para projetos de IOT, seja para utilização um servidor web, ou para qualquer outra utilização que precise de um servidor unix completo, o Raspberry Pi é uma excelente plataforma para testes, experimentações e projetos. 
 
