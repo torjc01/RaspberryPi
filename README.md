@@ -2,12 +2,7 @@
 ![GitHub](https://img.shields.io/github/license/mashape/apistatus)
 
 --- 
-<div align="center">
-    <img src="./images/raspberrypiLogo.png" width=200/>
-</div>
-
 # RaspberryPi
-
 Repositório de knowledge-base sobre o Raspberry Pi. 
 
 # [Instalação do sistema operacional e hardening de um RPi headless](./InstallHarden.md)
