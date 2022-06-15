@@ -3,9 +3,11 @@
 
 --- 
 # RaspberryPi
-Repository for documenting technical data on Raspberry Pi. 
+Repositório de knowledge-base sobre o Raspberry Pi. 
 
-# [Instalação do sistema operacional e hardening de um RPi](./InstallHarden.md)
+# [Instalação do sistema operacional e hardening de um RPi headless](./InstallHarden.md)
+
+# [Français - Installation et sécurisation d'un Raspberry Pi `headless`: de zero à hero ](./fr-InstallHarden.md)
 
 # [Localização de um RPi na rede local](./LocateRaspberryPiNetwork.md)
 
