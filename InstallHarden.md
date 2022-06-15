@@ -4,9 +4,9 @@
 --- 
 # Install and harden a headless RaspberryPi: From zero to hero 
 
-Seja para projetos de IOT, seja para utilização um servidor web, ou para qualquer outra utilização que precise de um servidor unix completo, o raspberry pi é uma excelente plataforma para testes, experimentações e projetos. 
+Seja para projetos de IOT, seja para utilização um servidor web, ou para qualquer outra utilização que precise de um servidor unix completo, o Raspberry Pi é uma excelente plataforma para testes, experimentações e projetos. 
 
-Eu utilizo a plataforma como a principal ferramenta de experimentação e prova de conceito antes de mover projetos para uma estrutura mais parruda. 
+Eu utilizo a plataforma como a principal ferramenta de experimentação e prova de conceito antes de mover projetos para uma estrutura mais robusta. 
 
 E em grande parte das situações, quando o escopo do projeto não é grande, o próprio Raspberry Pi é adequado para servir como o servidor de produção. 
 
@@ -118,18 +118,18 @@ Um hostname é usado para identificar o seu servidor usando um nome fácil de se
 
 O hostname pode ser usado como parte de um `FQDN (fully qualified domain name)` para o seu sistema (p.ex.: `web-01-prod.seusite.com.br`).
 
-Neste guia alteraremos o nome do host para `dev01.secpi`. 
+Neste guia alteraremos o nome do host para `dev-01-secpi`. 
 
 ```sh 
 # hostnamectl set-hostname <nome do servidor>
-$ hostnamectl set-hostname dev01.secpi
+$ hostnamectl set-hostname dev-01-secpi
 ```
 
 Altere o arquivo `/etc/hosts` para incluir o novo hostname. Por exemplo: 
 
 ```
-127.0.0.1        localhost    dev01.secpi
-192.168.1.100    dev01.secpi
+127.0.0.1        localhost    dev-01-secpi
+192.168.1.100    dev-01-secpi
 ```
 
 Após você ter feito estas alterações, você precisa fazer `logout` e fazer login novamente para ver o prompt do seu terminal mudar de `raspberry` para seu novo hostname.  O comando `hostname` assim como o comando `hostnamectl` também devem mostrar corretamente o seu novo hostname. 
@@ -138,7 +138,7 @@ Após você ter feito estas alterações, você precisa fazer `logout` e fazer l
 
 Para realizar a configuração dos defaults do sistema operacional, basta utilizar o comando `raspi-config`.
 
-```bash
+```sh
 $ sudo raspi-config
 ```
 
@@ -158,18 +158,40 @@ Entre nas opções seguintes e configure conforme as suas preferências:
 
 O acesso ao sistema se dá por meio de contas de usuários que devem ser geridas e acompanhadas. 
 
-Como nós lidaremos com a criação de usuários e com a troca de senhas, é recomendável o uso de um programa de gestão de senhas, como Keepass ou equivalente. No mínimo, mantenha um caderno de log para registrar os seus usuário. 
+Como nós lidaremos com a criação de usuários e com a troca de senhas, é recomendável o uso de um programa de gestão de senhas, como Keepass ou equivalente. No mínimo, mantenha um caderno de log para registrar os dados dos seus servidores, seus usuários, senhas, etc.
 
 
 ## Crie um novo usuário 
 
 O usuário default `pi` é inseguro porque ele é conhecido amplamente. Muitas tentativas de invasão de sistema começam exatamente explorando os usuários default dos sistemas. 
 
-Como exemplo nós criaremos um usuario chamado `secpi`. 
+Para o nosso guia de exemplo nós criaremos um usuario chamado `secpi`. 
 
 ```sh
 $ sudo adduser secpi        # vai pedir a criação de uma nova senha. Para os outros campos, digite enter para aceitar o branco. 
+pi@dev-01-secpi:~ $ sudo adduser secpi
+Adding user 'secpi' ...
+Adding new group 'secpi' (1001) ...
+Adding new user 'secpi' (1001) with group 'secpi' ...
+Creating home directory '/home/secpi' ...
+Copying files from '/etc/skel' ...
+New password: 
+Retype new password:
+passwd: password updated successfully
+Changing the user information for secpi
+Enter the new value, or press ENTER for the default
+        Full Name []:
+        Room Number []: 
+        Work Phone []:
+        Home Phone []:
+        Other []:
+Is the information correct? [Y/n] Y
+
 $ sudo adduser secpi sudo   # adiciona o usuário secpi ao grupo de sudoers 
+Adding user 'secpi' to group 'sudo' ...
+Adding user secpi to group sudo
+Done.
+
 $ sudo usermod -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,spi,i2c,gpio secpi # adiciona secpi a outros grupos de administrador
 ```
 Guarde a senha do usuário recém criado. Após a execução destes comandos, o novo usuário `secpi` está criado, os acessos de administração estão concedidos e um novo diretório *home* está disponível em `/home/secpi`. 
@@ -183,12 +205,24 @@ $ logout
 Ao refazer o logon com o usuário `secpi`, teste o acesso de administrador do usuário: 
 
 ```sh
-$ sudo su 
-[sudo] password for secpi: 
-root@raspberry:/home/secpi# 
+secpi@dev-01-secpi:~ $ sudo su
+
+We trust you have received the usual lecture from the local System
+Administrator. It usually boils down to these three things:
+
+    #1) Respect the privacy of others.
+    #2) Think before you type.
+    #3) With great power comes great responsibility.
+
+[sudo] password for secpi:
+root@dev-01-secpi:/home/secpi# 
 ```
 
-Se tudo correr bem, o sistema fará uma primeira exortação sobre segurança, e transformará o shell do usuário em super-usuário (`root@...`). 
+Se tudo correr bem, o sistema fará uma primeira exortação sobre segurança, e transformará o shell do usuário em super-usuário (`root@dev-01-secpi`). Saia do usuário `root` com o comando 
+
+```sh
+$ exit 
+```
 
 Desta forma, podemos proceder à supressão do usuário default `pi`. 
 
@@ -198,6 +232,11 @@ Execute o comando abaixo para fazer a supressão do usuário default `pi`:
 
 ```sh
 $ sudo deluser -remove-home pi  # remove o usuario e o seu home
+Looking for files to backup/remove ...
+Removing files ...
+Removing user 'pi' ...
+Warning: group 'pi' has no more members.
+??? como apagar o grupo ??? 
 ```
 
 ## Troque a senha do usuário `root` 
@@ -206,6 +245,9 @@ O usuário `root` tem privilégios elevados, e sua senha é de conhecimento púb
 
 ```sh 
 $ sudo passwd root
+New password: 
+Retype new password:
+passwd: password updated successfully
 ```
 
 Não se esqueça de manter um registro da senha do usuário `root` com seu método favorito. 
@@ -244,6 +286,13 @@ Reconfigure as chaves do servidor ssh:
 
 ```sh
 $ sudo dpkg-reconfigure openssh-server
+Creating SSH2 RSA key; this may take some time ...
+3072 SHA256:/WXZpkr916D+F.....bofbz5965ntcaLyw6DM12fs root@dev-01-secpi (RSA)
+Creating SSH2 ECDSA key; this may take some time ...
+256 SHA256:/32pA7VolFe9RS.....sKlNXj3ovLBYIthzg3KtzD+c root@dev-01-secpi (ECDSA)
+Creating SSH2 ED25519 key; this may take some time ...
+256 SHA256:NLhxYPYg/pYW/2.....XURB7SnCND8+0WYuyWAGPAO0 root@dev-01-secpi (ED25519)
+rescue-ssh.target is a disabled or a static unit, not starting it.
 ```
 
 Reinicie o servico ssh: 
@@ -251,6 +300,8 @@ Reinicie o servico ssh:
 ```sh
 $ sudo service ssh restart
 ```
+
+No computador local, edite o arquivo ~/.ssh/known_hosts e apague as linhas com as chaves do Raspberry Pi, identificadas pelo seu endereço IP ou pelo seu hostname. 
 
 ## Impeça login do root via SSH 
 
@@ -273,7 +324,6 @@ No Raspberry Pi, verificar se o diretório `.ssh` já existe com as autorizaçõ
 
 ```sh
 $ mkdir /home/secpi/.ssh
-$ mkdir /home/scepi/.ssh/authorized_keys
 $ chmod 700 /home/secpi/.ssh
 ```
 
@@ -283,9 +333,9 @@ A partir do computador de onde você irá se conectar ao RPi headless, crie uma 
 $ ssh-keygen -t rsa -b 4096 -f secpi_id_rsa
 ```
 
-Este comando gera um novo par de chaves `RSA` de 4096 bits e atribui o nome `secpi_id_rsa`.  
+Este comando gera um novo par de chaves `RSA` de 4096 bits e atribui o nome `id_rsa`.  
 
-Você deve ter agora pelo ao menos dois arquivos lá. Uma que termina com `_rsa.pub`e outra que termina com `_rsa`. 
+Você deve ter agora pelo ao menos dois arquivos lá. Uma que termina com `id_rsa.pub`e outra que termina com `id_rsa`. 
 
 Para verificar, rode o comando seguinte: 
 
@@ -299,7 +349,19 @@ Copie a chave pública gerada para o Raspberry Pi para o diretório `~/.ssh`.
 
 ```sh
 $ #scp ~/.ssh/id_rsa.pub secpi@secpi:/home/secpi/.ssh/authorized_keys
-$ ssh-copy-id -i ~/.ssh/secpi_id_rsa.pub secpi@secpi-ip-address
+$ ssh-copy-id -i ~/.ssh/id_rsa.pub secpi@secpi-ip-address
+/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/c/Users/julio/.ssh/secpi_id_rsa.pub"
+The authenticity of host 'dev-01-secpi (192.168.1.174)' can't be established.
+ECDSA key fingerprint is SHA256:/32pA7VolFe9RSgfXg+sKlNXj3ovLBYIthzg3KtzD+c.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+secpi@dev-01-secpi's password: 
+
+Number of key(s) added: 1
+
+Now try logging into the machine, with:   "ssh 'secpi@192.168.1.174'"
+and check to make sure that only the key(s) you wanted were added.
 ```
 
 Um arquivo chamado `authorized_keys` foi criado no diretório `.ssh` do seu usuário. Este arquivo é a chave pública que acabou de ser criada. 
@@ -319,6 +381,7 @@ Localize as linhas seguintes e as altere como abaixo. Se elas existirem, verifiq
 ```
 PermitRootLogin no
 PasswordAuthentication no
+PermitEmptyPasswords no
 ChallengeResponseAuthentication no
 UsePAM no
 ```
@@ -369,23 +432,23 @@ Para isso, crie um arquivo `config` no diretório `~/.ssh` e inclua o conteúdo 
 
 ```sh
 # Formato geral: 
-# Host <host-name> <host-ip-address>
+# Host <alias> <host-ip-address>
 #    HostName <hostname>
 #    IdentityFile <~/.ssh/id_rsa>
-#    User  <user-name>
+#    User  <username>
 
-# Configuração do servidor secpi, disponível no 192.168.1.100, llogando com usuário secpi
-Host dev01.secpi 192.168.1.100
-    HostName dev01.secpi
-    IdentityFile ~/.ssh/id_rsa
-    User  secpi
+# Configuração do servidor alias=secpi, disponível no IP 192.168.1.100, logando com usuário secpi
+Host secpi 192.168.1.100
+     HostName dev-01-secpi
+     IdentityFile ~/.ssh/id_rsa
+     User  secpi
 ```
 
 Salve e feche o arquivo, a partir de agora você é capaz de se conectar ao seu Raspberry Pi via SSH com toda a segurança, digitando apenas 
 
 ```sh
-# ssh hostname
-$ ssh dev01.secpi
+# ssh alias
+$ ssh secpi
 ```
 
 ### Opcional 2: mude a porta default do SSH (não é realmente efetivo)
@@ -432,13 +495,14 @@ tmpfs           1.9G     0  1.9G   0% /sys/fs/cgroup
 /dev/mmcblk0p1  253M   50M  203M  20% /boot
 tmpfs           384M     0  384M   0% /run/user/1001
 
-$ sudo apt-get remove --purge --assume-yes \
+$ sudo apt-get remove --purge --assume-yes  \
 scratch* \
 libreoffice* \
 wolfram-engine* \
 sonic-pi \
 minecraft-pi 
 
+#sudo apt-get remove --purge --assume-yes scratch* libreoffice* wolfram-engine* sonic-pi minecraft-pi 
 $ df -h    # compare com o espaço que você havia anotado e admire o espaço liberado! A diferença é o espaço total ganho nesta ação de liberação de espaço. 
  
 ```
@@ -514,6 +578,8 @@ Devemos então habilitar o firewall com o comando seguinte, que também o ativar
 
 ```
 $ sudo ufw enable
+Command may disrupt existing ssh connections. Proceed with operation (y|n)? y
+Firewall is active and enabled on system startup
 ```
 
 Se precisarmos desativar o firewall por algum motivo, a opção disable vai desabilitar o firewall e o impedirá de ser ativado após a reinicialização no boot. 
@@ -534,17 +600,25 @@ $ sudo ufw app list
 **Habilitar um perfil de aplicação** : 
 ```sh
 $ sudo ufw allow "OpenSSH"
+Rule added
+Rule added (v6)
 ```
 
 **Permitir toda conexão http** :  
 ```sh
 $ sudo ufw allow http    # ou sudo ufw allow 80  
+Rule added
+Rule added (v6)
 $ sudo ufw allow https   # ou sudo ufw allow 443   
+Rule added
+Rule added (v6)
 ```
 
 **Bloquear o envio de email**  
 ```sh
 $ sudo ufw deny out 25  
+Rule added
+Rule added (v6)
 ```
 
 
@@ -552,8 +626,16 @@ $ sudo ufw deny out 25
 
 ```sh
 $ sudo ufw default allow outgoing  # permite todas as conexões entrando
+Default outgoing policy changed to 'allow'
+(be sure to update your rules accordingly)
+
 $ sudo ufw default deny incoming   # nega todas as conexões saindo 
+Default incoming policy changed to 'deny'
+(be sure to update your rules accordingly)
+
 $ sudo ufw allow ssh               # permite o serviço ssh (porta default 22)
+Rule added
+Rule added (v6)
 ```
 
 
@@ -574,9 +656,15 @@ A administração do sistema supõe que os logs sejam lidos e acompanhados para
 `/var/log/mail.log`: Logs das mensagens de email 
 Procure consultar também os arquivos de log de todas as suas aplicações críticas, como por exemplo do Apache Webserver `/var/log/apache2/error.log` ou  do MySQL Server`/var/log/mysql/error.log`.
  
-Atividade extra: instale uma solução de `log observer` e integre todos os logs dos seus sistemas neles, como o `ELK Stack` ou `Splunk`. 
+Atividade extra: instale uma solução de agregação de dados e integre todos os logs dos seus sistemas neles, como o `ELK Stack` ou `Splunk`. 
 
 # Proteja o acesso físico ao Raspberry Pi
+
+A segurança física é uma prática vital para impedir que pessoas não autorizadas entrem em sua casa ou empresa e causem danos, proteger sua propriedade intelectual contra espionagem corporativa e mitigar a violência no local de trabalho, entre outras preocupações. Uma forte estratégia de segurança cibernética protege os dados confidenciais que os sistemas físicos retêm.
+
+Em termos de cibersegurança, o objetivo da segurança física é minimizar esse risco aos sistemas de informação e à informação. Portanto, o acesso a sistemas, equipamentos e ambientes operacionais deve ser limitado apenas a indivíduos autorizados. 
+
+No momento em que um dispositivo é conectado à rede, ele se torna uma possível superfície de ataque para um hacker alcançar a rede. Eles podem implantar malware, roubar dados ou causar estragos que interrompem as operações de negócios, causam a perda de sistemas, etc. Cada dispositivo conectado à IoT usado em sua casa ou sua organização deve ser devidamente protegido para evitar que isso aconteça.
 
 # Esteja em dia com as notícias de segurança e as bases de vulnerabilidade
 
