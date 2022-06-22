@@ -110,7 +110,7 @@ $ sudo apt-get clean
 $ sudo apt autoremove 
 ```
 
-Vérifiez le script [update-server.sh](./scripts/update-server.sh) pour un exemple de script de mise à jour qui peut être programmé via `cron` pour une exécution cyclique.
+Vérifiez le script [update-server.sh](./scripts/update-server.sh) pour un exemple de script de mise à jour qui peut être programmé via cron pour une exécution cyclique. Ou installez l'outil [`unatended-upgrades`](#automatically-upgrade-the-system-with-unattended-upgrades) qui gérera automatiquement les mises à jour des packages.
 
 ## Changez votre `hostname`
 
@@ -462,6 +462,129 @@ Enregistrez et fermez le fichier, à partir de maintenant vous pouvez vous conne
 $ ssh secpi
 ```
 
+# Authentification à deux facteurs (2FA - Two factor authentication)
+
+2FA est l'un des meilleurs moyens d'ajouter de la sécurité à votre connexion SSH déjà très sécurisée.
+
+La sécurité des applications peut être divisée en trois niveaux :
+
+- Ce que vous savez;
+- Ce que vous avez;
+- Ce que vous êtes.
+
+Le **mot de passe** est un cas classique du premier niveau, c'est quelque chose que vous connaissez, et pour être piraté, un attaquant doit travailler contre l'entropie et la force relative du mot de passe, sans compter sur quoi que ce soit d'autre.
+
+**2FA** est un cas de deuxième niveau ; il utilise quelque chose que vous possédez, l'application de génération de jetons liée à votre compte ; pour le casser, l'attaquant devrait avoir un accès physique à votre téléphone, ce qui rend l'attaque plus difficile.
+
+Et enfin, la **biométrie** est l'incarnation du troisième niveau ; même si un attaquant brise votre mot de passe et vole votre téléphone portable, il ne peut pas ses faire passer pour vous dans la plupart des applications biométriques (géométrie faciale, reconnaissance de l'iris, etc).
+
+Ainsi, pour augmenter la sécurité d'accès à votre serveur, dans le cas où votre serveur serait critique, par exemple un serveur d'échange de clés ou le point d'entrée dans votre réseau interne, vous souhaiterez peut-être avoir des garanties supplémentaires aux mesures déjà extraordinaires appliquées jusqu'à présent.
+
+En ajoutant 2FA à votre connexion SSH, l'utilisateur devra entrer un mot de passe OTP généré dans une application d'authentification. Cette mesure de protection supplémentaire permet d'améliorer la sécurité lorsque les utilisateurs se sont fait voler leur mot de passe ou leur clé SSH.
+
+## Installation du module 2FA SSH depuis Google
+
+Installons le PAM (plugable authentication module) qui implémente le protocole google 2FA.
+
+Grâce à ce module, nous pourrons exiger le code 2FA de l'utilisateur pour se connecter.
+
+Pour l'installer, utilisez la commande suivante
+
+```sh
+$ sudo apt-get install libpam-google-authenticator
+```
+
+Pour commencer le processus de configuration 2FA, exécutez la commande
+
+```sh
+$ google-authentificateur
+```
+
+Cette commande lancera le processus de création d'un jeton d'authentification pour l'utilisateur actuel.
+
+Il vous présentera un QR code à scanner avec l'application `Google Authenticator`, une `clé secrète` et une liste de `scratch codes`, que vous devrez copier et conserver en lieu sûr. Si vous perdez l'appareil sur lequel l'application "Google Authenticator" est installée, ces `scratch codes` vous aideront à retrouver l'accès au serveur. 
+
+*Remarque : ces codes ne peuvent être utilisés qu'une seule fois.*
+
+Ensuite, plusieurs questions seront présentées, répondez comme suggéré ci-dessous :
+
+```sh
+Do you want authentication tokens to be time-based (y/n)                         # répondez Y
+
+Do you want me to update your "/home/pi/.google_authenticator" file? (y/n)       # répondez Y
+
+Do you want to disallow multiple uses of the same authentication 
+token? This restricts you to one login about every 30s, but it increases
+your chances to notice or even prevent man-in-the-middle attacks (y/n)           # répondez Y
+
+By default, a new token is generated every 30 seconds by the mobile app.
+In order to compensate for possible time-skew between the client and the server,
+we allow an extra token before and after the current time. This allows for a
+time skew of up to 30 seconds between authentication server and client. If you
+experience problems with poor time synchronization, you can increase the window
+from its default size of 3 permitted codes (one previous code, the current
+code, the next code) to 17 permitted codes (the 8 previous codes, the current
+code, and the 8 next codes). This will permit for a time skew of up to 4 minutes
+between client and server.
+Do you want to do so? (y/n)                                                      # répondez N
+
+If the computer that you are logging into isn t hardened against brute-force
+login attempts, you can enable rate-limiting for the authentication module.
+By default, this limits attackers to no more than 3 login attempts every 30s.
+Do you want to enable rate-limiting? (y/n)                                       # répondez Y
+
+```
+
+## Configurer SSH pour utiliser 2FA
+
+Commencez par éditer le fichier `/etc/pam.d/sshd`, commentez la ligne `@include common-auth`
+
+```sh
+#@include common-auth
+```
+et ajoutez la ligne suivante après la dernière ligne
+
+``` 
+auth required pam_google_authenticator.so
+```
+
+Activez maintenant la fonction challenge/réponse du protocole SSH en éditant le fichier `/etc/ssh/sshd_config`; remplacer "non" par "oui" dans le champ ChallengeResponseAuthentification
+
+```sh
+# ChallengeResponseAuthentication no
+ChallengeResponseAuthentication yes
+```
+
+Ajoutez la ligne suivante à la fin du fichier
+
+```
+AuthenticationMethods publickey,keyboard-interactive
+```
+
+Redémarrez le serveur SSH
+
+```
+sudo systemctl restart sshd
+```
+
+À ce stade, vous avez déjà configuré 2FA pour authentifier les utilisateurs qui souhaitent se connecter au Raspberry Pi.
+
+Lors de l'établissement de la connexion SSH, il sera demandé un TOTP (`Verification code:`) pour l'authentification supplémentaire de l'utilisateur :
+```sh
+$ ssh secpi@192.168.1.135
+Verification code: 
+Linux dev-01-secpi 5.10.103-v7l+ #1529 SMP Tue Mar 8 12:24:00 GMT 2022 armv7l
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Last login: Fri Jun 17 01:00:14 2022 from 192.168.1.216
+secpi@dev-01-secpi:~ $ 
+```
+
 # Allégez l’installation du système
 
 En supprimant les éléments inutiles de votre système, c'est-à-dire les applications, les protocoles, les programmes, les services, les dépendances, etc, afin de diminuer la **surface d'attaque** disponible pour que les attaquants exploitent votre système.
@@ -505,12 +628,17 @@ ftp ==> sftp
 $ sudo apt-get remove telnet tftp ftp 
 $ sudo apt-get autoremove
 ```
+# Mettre à jour automatiquement le système avec `unatended-upgrades`
 
 # Installer un pare-feu
 
 Un pare-feu fonctionnant correctement est la partie cruciale d'une configuration de sécurité complète pour un système Linux.
 
-Par défaut, les distributions Ubuntu et Debian sont livrées avec un outil de configuration de pare-feu appelé `UFW (Uncomplicated Firewall)`, qui est l'outil le plus populaire et le plus convivial pour configurer et gérer un pare-feu sous Linux. UFW s'exécute sur `iptables`, qui est inclus dans la plupart des distributions Linux.
+Le pare-feu est utilisé pour bloquer ou autoriser les connexions entrant dans votre appareil. Cela vous permet d'empêcher les utilisateurs externes (et d'éventuels attaquants) d'accéder aux services fournis sur votre instance.
+
+Par défaut, la plupart des pare-feu autorisent tout le trafic sortant de l'appareil et bloquent tout le trafic entrant vers tout service ou port qui n'a pas été explicitement ouvert.
+
+Les distributions Ubuntu et Debian sont livrées avec un outil de configuration de pare-feu appelé `UFW (Uncomplicated Firewall)`, qui est l'outil le plus populaire et le plus convivial pour configurer et gérer un pare-feu sous Linux. UFW s'exécute sur `iptables`, qui est inclus dans la plupart des distributions Linux.
 
 Il fournit une interface simplifiée pour configurer les cas d'utilisation courants du pare-feu via la ligne de commande.
 
@@ -607,14 +735,14 @@ L'administration du système suppose que les journaux sont lus et surveillés r�
 
 Surveillez minimalement les journaux suivants : 
 
-    `/var/log/auth.log` : toutes les tentatives d'authentification se trouvent ici
-    `/var/log/message`  : fichier journal des messages de l'application
-    `/var/log/syslog`   : fichier journal principal pour tous les services exécutés sur le système
-    `/var/log/mail.log` : journaux des messages électroniques
+`/var/log/auth.log` : toutes les tentatives d'authentification se trouvent ici  
+`/var/log/message`  : fichier journal des messages de l'application  
+`/var/log/syslog`   : fichier journal principal pour tous les services exécutés sur le système  
+`/var/log/mail.log` : journaux des messages électroniques  
 
-Vérifiez également les fichiers journaux de toutes vos applications critiques, telles que Apache Webserver `/var/log/apache2/error.log` ou MySQL Server `/var/log/mysql/error.log`.
+Vérifiez également les fichiers journaux de toutes vos applications critiques, telles que Apache Webserver `/var/log/apache2/error.log`, MySQL Server`/var/log/mysql/error.log` ou le déjà cité fail2ban `/var/ log.fail2ban`.
  
-**Activité supplémentaire :** installez une solution d'agrégation de données, tel que `ELK Stack` ou `Splunk` et intégrez-y tous vos journaux de système.
+**Activité supplémentaire :** installez une solution d'agrégation de données, tel que [`ELK Stack`](https://www.elastic.co) ou `Splunk` et intégrez-y tous vos journaux de système.
 
 # Protégez l'accès physique au Raspberry Pi
 
