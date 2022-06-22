@@ -111,7 +111,7 @@ $ sudo apt-get clean
 $ sudo apt autoremove 
 ```
 
-Verifique o script [update-server.sh](./scripts/update-server.sh) para um exemplo de script de atualização que pode ser incluído na schedule via cron para sua execução cíclica. 
+Verifique o script [update-server.sh](./scripts/update-server.sh) para um exemplo de script de atualização que pode ser incluído na schedule via cron para sua execução cíclica. Ou faça a instalação da ferramenta [`unattended-upgrades`](#atualize-automáticamente-o-sistema-com-unattended-upgrades) que fará a gestão automática dos upgrades dos pacotes. 
 
 ## Altere o seu `hostname`
 
@@ -478,6 +478,130 @@ Atualize as definições da porta no firewall.
 
 Antes de fechar a sessão atual, abra outro terminal e tente se conectar à nova porta. 
 
+
+# Autenticação por dois fatores (2FA - Two factor authentication)
+
+A 2FA é uma das melhores maneiras de adicionar segurança à sua conexão SSH, já bastante segura. 
+
+A segurança de aplicações pode ser dividida em três níveis: 
+
+- o que você sabe; 
+- o que você tem; 
+- o que você é. 
+
+A **senha** é um caso clássico do primeiro nível, é algo que você sabe, e para ser quebrada um atacante tem que trabalhar contra a entropia e a força relativa da senha, sem depender de mais nada. 
+
+A **2FA** é um caso do segundo nível; ela utiliza algo que você tem, a aplicação de geração de tokens vinculada à sua conta; para quebrá-la, o atacante precisaria ter acesso físico ao seu telefone, o que implica em maior dificuldade ao ataque. 
+
+E finalmente, a **biometria** é a incarnação do terceiro nível; mesmo que um atacante quebre sua senha e roube seu celular, ele não tem como se passar por você na maior parte das aplicações biométricas (geometria facial, reconhecimento de íris, etc). 
+
+Desta forma, para aumentar a segurança do acesso ao seu servidor, no caso em que seu ele seja crítico, por exemplo um servidor de troca de chaves, ou o ponto de entrada na sua rede interna, você pode querer ter garantias adicionais às medidas já extraordinárias aplicadas até aqui. 
+
+Adicionando 2FA à sua conexão SSH, o usuário precisará entrar uma senha OTP gerada em um aplicativo de autenticação. Esta medida extra de proteção ajuda a melhorar a segunraça onde os usuários tenham tido a sua senha ou chave SSH roubadas. 
+
+## Instalando o módulo de 2FA SSH do google 
+
+Vamos instalar o PAM (plugable authentication module) que implementa o protocolo de 2FA do google. 
+
+Usando este módulo, poderemos exigir do usuário o código 2FA para realizar o log in. 
+
+Para instalar, use o comando seguinte 
+
+```sh
+$ sudo apt-get install libpam-google-authenticator
+```
+
+Para começar o processo de configuração do 2FA, execute o comando 
+
+```sh 
+$ google-authenticator
+```
+
+Este comando começará o processo de criar um token de autenticação para o usuário atual. 
+
+Ele te apresentará um códiigo QR a ser scaneado com a aplicação `Google Authenticator`, uma `secret key` e uma lista de `scratch codes`, que você deve copiar e guardar um um local seguro. Caso você perca o dispositivo em que esteja instalado o app do `Google Authenticator`, estes `scratch codes` auxiliarão na recuperação do acesso ao servidor. *Nota bene: estes códigos só podem ser utilizados uma única vez.* 
+
+Em seguida, diversas perguntas serão apresentadas, responda conforme sugerido abaixo: 
+
+```sh
+Do you want authentication tokens to be time-based (y/n)                         # responda Y
+
+Do you want me to update your "/home/pi/.google_authenticator" file? (y/n)       # responda Y
+
+Do you want to disallow multiple uses of the same authentication 
+token? This restricts you to one login about every 30s, but it increases
+your chances to notice or even prevent man-in-the-middle attacks (y/n)           # responda Y
+
+By default, a new token is generated every 30 seconds by the mobile app.
+In order to compensate for possible time-skew between the client and the server,
+we allow an extra token before and after the current time. This allows for a
+time skew of up to 30 seconds between authentication server and client. If you
+experience problems with poor time synchronization, you can increase the window
+from its default size of 3 permitted codes (one previous code, the current
+code, the next code) to 17 permitted codes (the 8 previous codes, the current
+code, and the 8 next codes). This will permit for a time skew of up to 4 minutes
+between client and server.
+Do you want to do so? (y/n)                                                      # responda N
+
+If the computer that you are logging into isn t hardened against brute-force
+login attempts, you can enable rate-limiting for the authentication module.
+By default, this limits attackers to no more than 3 login attempts every 30s.
+Do you want to enable rate-limiting? (y/n)                                       # responda Y
+
+```
+
+## Configure o SSH para usar o 2FA 
+
+Inicialmente edite o arquivo `/etc/pam.d/sshd`, comente a linha `@include common-auth` 
+
+```sh
+#@include common-auth
+```
+e adicione a linha seguinte após a ultima linha: 
+
+``` 
+auth required pam_google_authenticator.so
+```
+
+Agora, habilite a função de challenge/reponse do protocolo SSH, editando o arquivo `/etc/ssh/sshd_config`; substitua `no` por `yes` no campo ChallengeResponseAuthentification
+
+```sh
+# ChallengeResponseAuthentication no
+ChallengeResponseAuthentication yes
+```
+
+Adicione a seguinte linha ao fim do arquivo
+
+```
+AuthenticationMethods publickey,keyboard-interactive
+```
+
+Reinicie o servidor SSH 
+
+```
+sudo systemctl restart sshd
+```
+
+Neste ponto, você já tem a 2FA configurada para a autenticação dos usuários que queiram logar no Raspberry Pi. 
+
+Ao fazer a conexão SSH, será pedida a TOTP (`Verification code:`) para autenticação suplementar do usuário:
+
+```sh
+$ ssh secpi@192.168.1.135
+Verification code: 
+Linux dev-01-secpi 5.10.103-v7l+ #1529 SMP Tue Mar 8 12:24:00 GMT 2022 armv7l
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Last login: Fri Jun 17 01:00:14 2022 from 192.168.1.216
+secpi@dev-01-secpi:~ $ 
+```
+
+
 # Remova elementos não necessários do sistema
 
 Ao remover os elementos não necessários do seu sistema, i.e., aplicações, protocolos, programas, serviços, dependências, etc... de modo a diminuir a **superfície de ataque** disponível para ser explorada por atacantes do seu sistema. 
@@ -557,11 +681,20 @@ $ sudo apt-get remove telnet tftp ftp
 $ sudo apt-get autoremove
 ```
 
+# Atualize automáticamente o sistema com `unattended-upgrades`
+
+
+
+
 # Instale um firewall 
 
 Um firewall que funcione corretamente é a parte crucial de uma configuração completa de segurança de um sistema Linux. 
 
-Por default, as distribuições Ubuntu e Debian vem com uma ferramenta de configuração de firewall chamada `UFW (Uncomplicated Firewall)`, que é a ferramenta mais popular e de utilização simples para configuração e gestão de firewall no Linux. O UFW roda em cima de iptables, incluído na maioria das distribuições Linux. 
+O firewall é usado para bloquear ou permitir conexões entrando no seu dispositivo. Isso te permite bloquear usuários externos (e possíveis atacantes) de acessar os serviços disponibilizados na sua instância. 
+
+Por default, a maioria dos firewalls irá permitir todo tráfego de conexões saindo do dispositivo e bloquear todo tráfico de conexões entrando em qualquer serviço ou porta que não tenham sido explicitamente abertos. 
+
+As distribuições Ubuntu e Debian vem com uma ferramenta de configuração de firewall chamada `UFW (Uncomplicated Firewall)`, que é a ferramenta mais popular e de utilização simples para configuração e gestão de firewall no Linux. O UFW roda em cima de iptables, incluído na maioria das distribuições Linux. 
 
 Ele fornece uma interface simplificada para configurar casos de uso de firewall comuns por meio da linha de comando.
 
@@ -651,6 +784,96 @@ Para mais detalhes de utilização do UFW, por favor veja a [página man UFW](ht
 man ufw 
 ```
 
+# Configure fail2ban 
+
+`Fail2ban` é uma ferramenta criada especificamente para a tarefa de ler continuamente os logs de sistema para tentar identificar a ação de possíveis atacantes e bloquear automaticamente tentativas claras de força-bruta ou de exploração de vulnerabilidades no sistema.
+
+`Fail2ban` auxilia a mitigar a segurança do Raspberry Pi dificultando os ataques de força bruta ao sistema: quando um atacante tenta ganhar acesso repetindo a tentativa de conexão diversas vezes com credenciais diferentes. 
+
+A eliminação das credenciais de usuários default, o uso de chaves ssh e de 2FA tornam muito difícil para alguma pessoa conseguir acesso ao seu sistema; `fail2ban`apenas adiciona uma camada extra de segurança. 
+
+## Instalação e configuração de fail2ban 
+
+Instale a aplicação com o comando 
+
+```sh 
+$ sudo apt install fail2ban
+
+```
+Em seguida, copie o arquivo de configuração `jail.conf` para o arquivo `jail.local`. O arquivo `.local` faz o override de configurações do arquivo `.conf`, que não pode ser modificado pois ele é regenerado a cada atualização de fail2ban. Após copiar, edite o arquivo `.local`: 
+
+```sh
+$ sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+
+$ sudo nano /etc/fail2ban/jail.local
+```
+
+Localize a string `[sshd]` e habilite o protocolo
+
+```
+[sshd]
+enabled = true
+filter = sshd
+```
+
+
+
+Finalmente, configure a quantidade máxima de falhas de tentativas de logon e o tempo que o usuário ficará banido, em segundos. Se o tempo for `-1` como no exemplo, o usuário ficará bloqueado indefinidamente. 
+
+```sh
+bantime = -1
+maxretry = 3
+```
+
+Após todas as alterações, você deverá ter um arquivo jail.local com o seguinte conteúdo:
+
+```sh
+[sshd]
+enabled = true
+filter = sshd
+port = ssh
+banaction = iptables-multiport
+bantime = -1
+maxretry = 3
+logpath = %(sshd_log)s
+backend = %(sshd_backend)s
+```
+
+Para proteção de um servidor `nginx` adicione os parágrafos abaixo ao fim do arquivo `jail.local`: 
+
+```sh
+[nginx-botsearch]
+enabled = true
+port = http,https
+filter = nginx-botsearch
+logpath = %(nginx_error_log)s
+bantime = 30d
+
+[nginx-noscript]
+enabled = true
+port = http,https
+filter = nginx-noscript
+logpath = %(nginx_access_log)s
+maxretry = 1
+bantime = 30d
+
+[nginx-badbots]
+enabled = true
+port = http,https
+filter = nginx-badbots
+logpath = %(nginx_access_log)s
+maxretry = 1
+bantime = 30d
+```
+
+Restarte o serviço fail2ban
+
+```sh 
+$ sudo service fail2ban restart
+```
+
+Os logs do fail2ban podem ser achados no diretorio `/var/log/fail2ban`. Verifique todos os logs ou os agregue numa ELK Stack. 
+
 
 # Check os logs regularmente
 
@@ -661,9 +884,9 @@ A administração do sistema supõe que os logs sejam lidos e acompanhados regul
 `/var/log/syslog`:   Log file principal para todos os serviços executados no sistema  
 `/var/log/mail.log`: Logs das mensagens de email  
 
-Procure consultar também os arquivos de log de todas as suas aplicações críticas, como por exemplo do Apache Webserver `/var/log/apache2/error.log` ou  do MySQL Server`/var/log/mysql/error.log`.
+Procure consultar também os arquivos de log de todas as suas aplicações críticas, como por exemplo do Apache Webserver `/var/log/apache2/error.log`, do MySQL Server`/var/log/mysql/error.log` ou do já citado fail2ban `/var/log.fail2ban`.
  
-**Atividade extra:** instale uma solução de agregação de dados e integre todos os logs dos seus sistemas neles, como o `ELK Stack` ou `Splunk`. 
+**Atividade extra:** instale uma solução de agregação de dados e integre todos os logs dos seus sistemas neles, como o [`ELK Stack`](https://www.elastic.co) ou `Splunk`. 
 
 # Proteja o acesso físico ao Raspberry Pi
 
@@ -695,23 +918,9 @@ No momento em que um dispositivo é conectado à rede, ele se torna uma possíve
 ---
 ---
 
-
-
-# Install fail2ban 
-
-sudo apt install fail2ban
-
-sudo nano /etc/fail2ban/jail.conf
-
-sudo service fail2ban restart
-
-
+ 
 
 # Backup your data 
-
 # Crypt your connections 
-
-
-
 # Use a VPN 
 
