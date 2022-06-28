@@ -548,11 +548,13 @@ et ajoutez la ligne suivante après la dernière ligne
 auth required pam_google_authenticator.so
 ```
 
-Activez maintenant la fonction challenge/réponse du protocole SSH en éditant le fichier `/etc/ssh/sshd_config`; remplacer "non" par "oui" dans le champ ChallengeResponseAuthentification
+Activez maintenant la fonction challenge/réponse du protocole SSH en éditant le fichier `/etc/ssh/sshd_config`; remplacer `no` par `yes` dans le champ ChallengeResponseAuthentification; et activez l'autentification via PAM (pluggable authentication method); remplacer `no` par `yes` dans le champ UsePAM
 
 ```sh
 # ChallengeResponseAuthentication no
 ChallengeResponseAuthentication yes
+# UsePAM no
+UsePAM yes
 ```
 
 Ajoutez la ligne suivante à la fin du fichier
