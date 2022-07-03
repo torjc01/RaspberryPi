@@ -10,21 +10,21 @@
 
 Seja para projetos de IOT, seja para utilização um servidor web, ou para qualquer outra utilização que precise de um servidor unix completo, o Raspberry Pi é uma excelente plataforma para testes, experimentações e projetos. 
 
-Eu utilizo a plataforma como a principal ferramenta de experimentação e prova de conceito antes de mover projetos para uma estrutura mais robusta. 
+Eu utilizo a plataforma como a principal ferramenta de experimentação e prova de conceito antes de mover meus projetos para uma estrutura mais robusta para a "produção". 
 
 E em grande parte das situações, quando o escopo do projeto não é grande, o próprio Raspberry Pi é adequado para servir como o servidor de produção. 
 
-Frequentemente, você pode querer rodar o Raspberry Pi em modo 'headless`, sem monitor ou teclado, utilisando SSH para se conectar diretamente a ele. 
+Frequentemente, você pode querer rodar o Raspberry Pi em modo `headless`, sem monitor ou teclado, utilisando SSH para se conectar diretamente a ele. 
 
-O Raspberry Pi vem com a segurança baixa, por default. Se você estiver o utilizando em casa ou numa rede pequena, isso não é um grande problema, mas se você abrir suas portas para a internet, usá-lo como access point Wi-Fi ou se você o instalar em uma rede maior, você precisa tomar medidas de segurança para proteger seu Raspberry Pi. Neste guia, mostrarei tudo o que faço com os meus servidores Linux para mantê-los em segurança. 
+O Raspberry Pi vem com a segurança baixa, por default. Se você estiver o utilizando em casa ou numa rede pequena, isso não é um grande problema, mas se você abrir suas portas para a internet, usá-lo como access point Wi-Fi ou se você o instalar em uma rede maior, você precisa tomar medidas de segurança para proteger seu Raspberry Pi, e consequentemente, toda a sua rede. Neste guia, mostrarei tudo o que faço com os meus servidores Linux para mantê-los em segurança. 
 
-Melhorar a segurança no Raspberry Pi é similar em qualquer outro dispositivo Linux. Há os passos lógicos, como utilizar uma senha forte. E também há os passos mais complexos, como detectar ataques ou usar criptografia. 
+Melhorar a segurança no Raspberry Pi é similar em qualquer outro dispositivo Linux. Há os passos mais óbvios, como utilizar uma senha forte. E também há os passos mais complexos, como detectar ataques ou usar criptografia. 
 
-Vou compartilhar algumas dicas de segurança que você deve seguir para obter uma segurança maior para o seu Raspberry Pi (e quase todas elas se aplicam a qualquer distribuição Linux). Se você está só usando o seu Raspberry Pi em casa, tente ao menos aplicar as primeiras dicas, de segurança de contas de usuário, pelo ao menos. Siga todas as dicas incluídas para um setup mais robusto, para expor à internet ou a uma rede mais abrangente. 
+Vou compartilhar algumas dicas de segurança que você deve seguir para obter uma segurança maior para o seu Raspberry Pi (e quase todas elas se aplicam a qualquer distribuição Linux). Se você está só usando o seu Raspberry Pi em casa, aplique as primeiras dicas de segurança de contas de usuário, pelo ao menos. Siga todas as dicas incluídas para um setup mais robusto, ao expor à internet ou a uma rede mais abrangente. 
 
 Eu selecionei as dicas de segurança que se aplicam a todos que hospedam um Raspberry Pi e compartilham serviços nele. Eu utilizo a plataforma há vários anos, e estas são as dicas que eu aplico a qualquer nova instalação de servidor. 
 
-Elas estão em ordem de nível de risco. Se você acha que está altamente exposto, siga todos os passos, e você estará seguro. 
+Elas estão em ordem de nível de risco. Se você acha que está altamente exposto, sugiro que você siga todos os passos, assim você estará seguro. 
 
 Se o seu nível de risco não é muito grande, você só precisará seguir os primeiros passos. 
 
@@ -38,9 +38,7 @@ Se o seu nível de risco não é muito grande, você só precisará seguir os pr
 
 ## Faça o download e a gravação da imagem
 
-Faça o download do Raspberry Pi Imager no computador local, de acordo com o sistema operacional. O Imager está  disponível à partir da Raspberry Pi Foundation.
-
-https://www.raspberrypi.com/software/
+Faça o download do Raspberry Pi Imager no computador local, de acordo com o sistema operacional. O download do Imager está disponível à partir da [Raspberry Pi Foundation](https://www.raspberrypi.com/software/).
 
 Após a instalação, lance o Imager e escolha a versão do sistema operacional clicando em `CHOOSE OS`. 
 
@@ -54,7 +52,7 @@ Escolha a primeira opção, `Raspberry Pi OS Lite (32-bit)`, assegurando-se que 
 
 ![Imager etapa 03](./images/imager03.png)
 
-Escolha o cartão microSD que será gravado clicando em `CHOOSE SD CARD`. Em seguida, clique em `WRITE` para começar a gracação do sistema operacional no cartão.  
+Escolha o cartão microSD que será gravado clicando em `CHOOSE SD CARD`. Em seguida, clique em `WRITE` para começar a gravação do sistema operacional no cartão.  
 
 ![Imager etapa 04](./images/imager04.png)
 
@@ -64,7 +62,7 @@ Ao fim da instalação, ejete o cartão SD e reconecte-o ao computador.
 
 ## Configure wifi e acesso remoto
 
-Conforme o seu sistema operacional, acesse o drive chamdo `boot`.
+Utilizando o explorador de arquivos do seu sistema operacional, acesse o drive chamdo `boot`.
 
 Para habilitar o acesso SSH, crie um arquivo vazio chamado `ssh`: 
 
@@ -72,7 +70,7 @@ Para habilitar o acesso SSH, crie um arquivo vazio chamado `ssh`:
 $ touch ssh 
 ``` 
 
-Ainda dentro do diretório `/boot`, crie um arquivo `wpa_supplicant.conf` e cole o conteúdo abaixo: 
+Ainda dentro do drive `/boot`, crie um arquivo `wpa_supplicant.conf` e cole o conteúdo abaixo: 
 
 ```
 country=ca
@@ -88,13 +86,15 @@ network={
 
 Altere os campos `ssid` e `psk` para os valores da sua rede local. 
 
-Insera o cartão no Raspberry Pi, espere alguns minutos até o sistema inicializar, e faça o seu primeiro logon com o usuário default da distribuição Raspberry Pi OS. 
+Insira o cartão no Raspberry Pi, espere alguns minutos até o sistema inicializar, e faça o seu primeiro logon com o usuário `pi`, default da distribuição Raspberry Pi OS. 
 
-`ssh pi@raspberrypi`
+```bash
+ssh pi@raspberrypi
+```
 
 A senha do usuário default é `raspberry`. 
 
-Caso o device não seja localizado, verifique as alternativas para descobrir um Raspberry Pi em uma rede local no [Descubra o endereço IP do seu Raspberry Pi](./LocateRaspberryPiNetwork.md). 
+Caso o device não seja localizado, verifique as alternativas para descobrir um Raspberry Pi em uma rede local na página [Descubra o endereço IP do seu Raspberry Pi](./LocateRaspberryPiNetwork.md). 
 
 ## Realize a atualização inicial do Raspberry Pi 
 
