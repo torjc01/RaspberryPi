@@ -16,19 +16,20 @@ sudo apt-get full-upgrade
 ## Utilitários
 
 
-```
+```sh
 sudo apt-get install --assume-yes \
 nano \
-mcrypt \
+mcrypt \       # utilitário pra criptografia
 sendmail \
-nasm \
+nasm \         # compilador assembler
 curl \
 wget \
-hexdump \
-avahi-daemon \ 
+hexdump \      # utilitário visualizador de hexadecimal
+avahi-daemon \ # implementação do protocolo Bonjour, para localização na rede
 git \  
 jq \  
 zsh \  
+nmap           # utilitário exploração de rede
 ```
 
 
