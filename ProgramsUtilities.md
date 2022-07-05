@@ -47,6 +47,8 @@ nmap           # utilitário exploração de rede
 
 # Linguagens de programação 
 
+**TODO: incluir Java e Assembler; ordenar alfabeticamente; incluir toc no começo do arquivo**
+
 ## COBOL 
 
 ```sh
