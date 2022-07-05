@@ -11,8 +11,6 @@ sudo apt-get update
 sudo apt-get full-upgrade 
 ```
 
-
-
 ## Utilitários
 
 
@@ -43,6 +41,19 @@ nmap           # utilitário exploração de rede
 
 ### MySQL Server / MariaDB
 
+
+## Post-mortem: clean-up do sistema 
+
+Após as instalações de ferramentas ou linguagens de programação, é recomendável fazer uma limpeza do estado do gerenciador de pacotes, bem como reiniciar a máquina. 
+
+```sh 
+# Limpa o estado do apt
+$ sudo apt-get clean 
+$ sudo apt autoremove 
+
+# Reinicia a máquina 
+$ sudo reboot
+```
 
 
 # Linguagens de programação 
