@@ -18,7 +18,7 @@ Repositório de knowledge-base sobre o Raspberry Pi.
 
 # [Localização de um RPi na rede local](./LocalizaRaspberryPiRede.md)
 
-# [Instalação de programas, utilitários e linguagens de programação ](./ProgramsUtilities.md)
+# [Instalação de programas, utilitários e linguagens de programação ](./ProgUtilitarios.md)
 
 # [Referências](./References.md)
 
