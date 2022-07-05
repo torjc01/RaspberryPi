@@ -47,12 +47,13 @@ Approximate round trip times in milli-seconds:
 
 ## Alternativa 2: `arp`
 
-The MAC Address, or Media Access Control Address, of a host, identifies the serial number of the Network Card. 
-This serial number can be traced back to a vendor. 
-For the Raspberry Pi Foundation, the MAC Address will begin with the characters B8:27:EB. 
-Scanning the network with nmap we can return hosts that are up and their MAC Address. 
-Make you are running the command as root or with sudo as the MAC Address is not returned if you run the command as a standard user. 
-I am using the address range 192.168.0.0/24 as that is the network that I have at home. You will need to adjust to match your network.
+O MAC address, ou **Media Access Control Address** de um host identifica o número de série de uma placa de rede. 
+
+Este número de série é vinculado ao fornecedor do equipamento. 
+
+Para a Raspberry Pi Foundation, o endereço MAC começa com os caracteres `B8:27:EB`. 
+
+Execute o comando arp e procure por um Physical Address que começe com o prefixo da Raspberry Pi Foundation. 
 
 ```bash 
 $ arp -av
@@ -75,21 +76,24 @@ Interface: 192.168.1.216 --- 0x12
 
 ## Alternativa 3: `nmap` 
 
-NMAP or the Network Mapper is a tool originally developed in 1997 for Linux. 
-Availability is much better now with versions for OSX, Windows and Unix systems as well as the original Linux platform. 
-NMAP can be used by system administrators in locating threats on their network, but we will see how we can find my raspberry pi using NMAP. 
-Make sure that the host we install NMAP onto is on the same network as the Raspberry Pi need locating. 
+`nmap` ou Network Mapper é uma ferramenta originalmente desenvolvida em 1997 para o Linux. A disponibilidade é muito melhor agora com versões para sistemas OSX, Windows e outros Unix, bem como a plataforma Linux original. 
 
-Instalar o nmap 
+O `nmap` pode ser usado por administradores de sistemas na localização de ameaças em sua rede. Certifique-se de que o host em que instalamos o `nmap` esteja na mesma rede que o Raspberry Pi precisa ser localizado.
+
+Um scan da rede com `nmap` retorna os hosts que estão conectados e os seus MAC address. Certifique-se que você esteja executando o `nmap` como root ou com sudo, pois o MAC address não é devolvido se você executa-lo como um usuário padrão. 
+
+Estou usando a faixa de endereços 192.168.0.0/24, que é a rede que eu tenho em casa. Você precisará se ajustar para corresponder à sua rede.
+
+Instalar o `nmap` 
 
 ```
 sudo apt-get install nmap
 ```
 
-Verifique qual é a subnet da sua rede local. 
+Faça o scan na subnet da sua rede local: 
 
 ```
-$ sudo nmap -sP 192.168.1.*/24
+$ sudo nmap -sP 192.168.0.0/24
 
 Starting Nmap 7.70 ( https://nmap.org ) at 2022-05-26 15:42 EDT
 Nmap scan report for SR400ac-0E00.lan (192.168.1.1)
@@ -138,5 +142,5 @@ Nmap done: 256 IP addresses (14 hosts up) scanned in 8.24 seconds
 
 ## Alternativa 4: `nmap` com `awk`
 ```bash
-$ sudo nmap -sP 192.168.1.0/24 | awk '/^Nmap/{ipaddress=$NF}/DC:A6:32/{print ipaddress}' # Identifica RPi4 + 
+$ sudo nmap -sP 192.168.0.0/24 | awk '/^Nmap/{ipaddress=$NF}/DC:A6:32/{print ipaddress}' # Identifica RPi4 + 
 ```

@@ -16,7 +16,7 @@ Repositório de knowledge-base sobre o Raspberry Pi.
 
 # [Français - Installation et sécurisation d'un Raspberry Pi `headless`: de zéro à héro ](./fr-InstallHarden.md)
 
-# [Localização de um RPi na rede local](./LocateRaspberryPiNetwork.md)
+# [Localização de um RPi na rede local](./LocalizaRaspberryPiRede.md)
 
 # [Instalação de programas, utilitários e linguagens de programação ](./ProgramsUtilities.md)
 

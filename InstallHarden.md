@@ -241,7 +241,8 @@ Looking for files to backup/remove ...
 Removing files ...
 Removing user 'pi' ...
 Warning: group 'pi' has no more members.
-??? como apagar o grupo ??? 
+
+$ groupdel pi                   # remove o grupo usuario pi 
 ```
 
 ## Troque a senha do usuário `root` 
@@ -258,7 +259,9 @@ passwd: password updated successfully
 Não se esqueça de manter um registro da senha do usuário `root` com seu método favorito. 
 ## Faça `sudo` exigir a senha do usuário
 
-Em algumas instalações, a execução do comando `sudo` não pede que o usuário redigite a sua senha a cada uso. 
+Em algumas instalações, a execução do comando `sudo` não pede que o usuário redigite a sua senha a cada uso, o sistema se lembra de autorização do usuário por um período de tempo determinado. Isso abre a possibilidade para processos não autorizados de executar comandos de super-usuário aproveitando esta autorização. 
+
+Vamos configurar o sistema para que toda vez que um comando que necessite de autorização de super-usuário seja executado, uma nova autorização seja fornecida pelo usuário. 
 
 Edite o arquivo 
 ```sh
