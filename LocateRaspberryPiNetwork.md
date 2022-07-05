@@ -11,9 +11,9 @@ Caso você tenha o Raspberry Pi conectado a um monitor, uma vez logado no seu Ra
 $ hostname -I
 ```
 
-Caso você tenha uma instalação headless, que é o escopo desta documentação, você pode tentar a alternativa 1: ping, pingando o hostname default do Raspberry Pi OS: `raspberry`.
+Caso você tenha uma instalação `headless`, que é o escopo desta documentação, você pode tentar a alternativa 1: ping, pingando o hostname default do Raspberry Pi OS: `raspberry`.
 
-Se não funcionar, você precisará examinar a sua rede atrás de indicios que revelem o endereço IP do seu RPi. O `nmap` repertoria em seus arquivos de configuração os prefixos de eendereços MAC de dispositivos conhecidos. Use os prefixos para o Raspberry Pi listados abaixo para adaptar as alternativas 2 e 3. 
+Se não funcionar, você precisará examinar a sua rede atrás de indícios que revelem o endereço IP do seu RPi. O `nmap` repertoria em seus arquivos de configuração os prefixos de endereços MAC de dispositivos conhecidos. Use os prefixos de Raspberry Pi listados abaixo para adaptar as alternativas 2 e 3. 
 
 Atenção: hexa do windows -  
          hexa do *nix    :  
