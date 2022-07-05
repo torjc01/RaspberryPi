@@ -8,23 +8,23 @@
 
 # Instalação do sistema operacional e hardening de um RPi headless: from zero to hero
 
-Seja para projetos de IOT, seja para utilização um servidor web, ou para qualquer outra utilização que precise de um servidor unix completo, o Raspberry Pi é uma excelente plataforma para testes, experimentações e projetos. 
+Seja para projetos de IoT, seja para um servidor web ou para qualquer outra utilização que precise de um servidor unix completo, o Raspberry Pi é uma excelente plataforma para testes, experimentações e projetos. 
 
-Eu utilizo a plataforma como a principal ferramenta de experimentação e prova de conceito antes de mover meus projetos para uma estrutura mais robusta para a "produção". 
+Eu utilizo a plataforma como a principal ferramenta de experimentação e prova de conceito antes de mover meus projetos para uma estrutura mais robusta de "produção". 
 
-E em grande parte das situações, quando o escopo do projeto não é grande, o próprio Raspberry Pi é adequado para servir como o servidor de produção. 
+Em grande parte das situações, quando o escopo do projeto não é grande, o próprio Raspberry Pi é adequado para ser o servidor de produção. 
 
-Frequentemente, você pode querer rodar o Raspberry Pi em modo `headless`, sem monitor ou teclado, utilisando SSH para se conectar diretamente a ele. 
+Frequentemente você pode querer rodar o Raspberry Pi em modo `headless`, sem monitor e sem teclado, utilizando SSH para se conectar diretamente a ele. 
 
 O Raspberry Pi vem com a segurança baixa, por default. Se você estiver o utilizando em casa ou numa rede pequena, isso não é um grande problema, mas se você abrir suas portas para a internet, usá-lo como access point Wi-Fi ou se você o instalar em uma rede maior, você precisa tomar medidas de segurança para proteger seu Raspberry Pi, e consequentemente, toda a sua rede. Neste guia, mostrarei tudo o que faço com os meus servidores Linux para mantê-los em segurança. 
 
 Melhorar a segurança no Raspberry Pi é similar em qualquer outro dispositivo Linux. Há os passos mais óbvios, como utilizar uma senha forte. E também há os passos mais complexos, como detectar ataques ou usar criptografia. 
 
-Vou compartilhar algumas dicas de segurança que você deve seguir para obter uma segurança maior para o seu Raspberry Pi (e quase todas elas se aplicam a qualquer distribuição Linux). Se você está só usando o seu Raspberry Pi em casa, aplique as primeiras dicas de segurança de contas de usuário, pelo ao menos. Siga todas as dicas incluídas para um setup mais robusto, ao expor à internet ou a uma rede mais abrangente. 
+Vou compartilhar algumas dicas de segurança que você pode seguir para obter uma segurança maior para o seu Raspberry Pi (e quase todas elas se aplicam a qualquer distribuição Linux). Se você está usando o seu Raspberry Pi só em casa, aplique ao menos as primeiras dicas de segurança de contas de usuário. Siga todas as dicas incluídas para ter um setup mais robusto, ao expor à internet ou a uma rede mais abrangente. 
 
-Eu selecionei as dicas de segurança que se aplicam a todos que hospedam um Raspberry Pi e compartilham serviços nele. Eu utilizo a plataforma há vários anos, e estas são as dicas que eu aplico a qualquer nova instalação de servidor. 
+Eu selecionei as dicas de segurança que se aplicam a todos que hospedam um Raspberry Pi e compartilham serviços nele. Eu utilizo a plataforma há vários anos, e estas são as dicas que eu aplico a toda nova instalação de servidor. 
 
-Elas estão em ordem de nível de risco. Se você acha que está altamente exposto, sugiro que você siga todos os passos, assim você estará seguro. 
+Elas estão em ordem de nível de risco. Se você acha que está altamente exposto, sugiro que você siga todos os passos, assim você estará mais seguro. 
 
 Se o seu nível de risco não é muito grande, você só precisará seguir os primeiros passos. 
 
