@@ -2,6 +2,8 @@
 
 ## UFW Uncomplicated Firewall 
 
+Procedimento de compilaçao
+
 $ sudo apt install ufw 
 
 $ sudo /etc/default/ufw 
