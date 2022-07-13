@@ -2,8 +2,8 @@ https://www.tecmint.com/ssh-warning-banner-linux/
 
 There are two ways to display messages to the user logging in. One is using issue.net and the other the MOTD file. 
 
-1. issue.net - display a banner message before the password login prompt. 
-2. motd - display a banner message after the login prompt. 
+1. issue.net - display a banner message before the password login prompt -> prompt para logon
+2. motd - display a banner message after the login prompt -> após o logon
 
 Para utilizar os arquivos 
 
