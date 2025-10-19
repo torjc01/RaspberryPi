@@ -89,7 +89,7 @@ Altere os campos `ssid` e `psk` para os valores da sua rede local.
 Insira o cartão no Raspberry Pi, espere alguns minutos até o sistema inicializar, e faça o seu primeiro logon com o usuário `pi`, default da distribuição Raspberry Pi OS. 
 
 ```bash
-ssh pi@raspberrypi
+ssh pi@raspberrypi.local
 ```
 
 A senha do usuário default é `raspberry`. 
