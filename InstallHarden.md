@@ -94,7 +94,7 @@ ssh pi@raspberrypi.local
 
 A senha do usuário default é `raspberry`. 
 
-Caso o device não seja localizado, verifique as alternativas para descobrir um Raspberry Pi em uma rede local na página [Descubra o endereço IP do seu Raspberry Pi](./LocateRaspberryPiNetwork.md). 
+Caso o device não seja localizado, verifique as alternativas para descobrir um Raspberry Pi em uma rede local na página [Descubra o endereço IP do seu Raspberry Pi](./LocalizaRaspberryPiRede.md). 
 
 ## Realize a atualização inicial do Raspberry Pi 
 
